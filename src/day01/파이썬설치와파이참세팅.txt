@@ -1,0 +1,38 @@
+[1] python 설치
+	1. https://www.python.org
+	2. [다운로드] -> Python 3.12.5 ( 현재 강의 날짜 기준 )
+
+[2] python 확인 
+	1. 윈도우 검색창 -> cmd -> [입력] python --version
+	2. [Python 3.12.5] 나오면 정상
+ 
+[3] python IDLE [ 강의 에서 사용안함 ]
+	1. 윈도우 검색창 -> [입력후] IDLE [실행] 
+	2. [테스트] 1+1 [입력후 엔터]
+
+[4] PyCharm Community Edition
+	1. https://www.jetbrains.com/ko-kr/pycharm/download
+	2. [Community Edition]  exe 다운로드 ( 2024.1.6 , 현재 강의 날짜 기준 )
+	3. [옵션] 모두 체크 -> 다운로드 완료 
+
+[5] PyCharm 에서 python 프로젝트 생성 
+	1. PyCharm 실행 
+	2. [ new project ] 클릭 
+		Name : tj_2024A_python (프로젝트명 임의)
+		Location : C:\Users\TJ-BU-703-강사PC\Desktop (프로젝트 폴더 경로 )
+		Interpreter Type : [Project venv]
+		Python version : C:/Users ~~~~  ( 현재 pc의 파이썬 설치된 경로 선택 )
+	3. [Create] 클릭 
+
+[6] python 프로젝트 확인 
+	프로젝트명[tj_2024A_python]
+	- .venv ( 파이썬 라이브러리 폴더 ) 
+	- src ( 소스 폴더 )
+	-- day01( 강의 일자별 폴더 )
+		1_파이썬시작.py
+
+[7] PyCharm 에서 python 파일 실행 하는 방법 
+	(방법1) 파일 빈공간을 오른쪽 클릭 -> Run
+	(방법2) 상단 메뉴 -> [Run] -> [Run]
+	(방법3) ctrl+shift+F10
+
