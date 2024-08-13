@@ -45,6 +45,111 @@ if money :
     print('타고')
 #        print('가라') # IndentationError: unexpected indent , 예외발생
 
+# (3) 조건문이란 무엇인가?
+    # - 조건문이란 참 과 거짓을 판단하는 문장
+# 1. 비교연산자 , >초과 <미만 >=이상 <=이하 ==같다 !=같지않다
+x = 3
+y = 2
+print( x > y )  # True
+print( x < y )  # False
+print( x == y ) # False
+print( x != y ) # True
+print( x >= y ) # True
+print( x <= y ) # False
+# 예제1
+money = 2000
+if money >= 3000 :      # money(2000) >= 3000  , False
+    print('택시를 타고 가라')
+else :
+    print('걸어가라')
+    # '걸어가라' 출력된다.
+
+# 2. 논리연산자 , and 이면서 or 이거나 not 부정
+money = 2000
+card = True
+if money >= 3000 or card : # money(2000) >= 3000 or card(True) , True
+    print('택시를 타고 가라')
+else :
+    print('걸어가라')
+# '택시를 타고 가라' 출력된다.
+
+# 3. 기타연산자 , value in 리스트/튜플/문자열 , not in 리스트/튜플/문자열
+print( 2 in [1, 2, 3] )     # True
+print( 2 not in [1, 2, 3] ) # False
+print( 'a' in ('a','b','c' ) ) # 튜플에 'a'가 있는가? True
+print( 'j' not in 'python' )    # 문자열에 'j'가 없는가? True
+# 예
+pocket = ['paper' , 'cellphone' , 'money' ]
+if 'money' in pocket :  # 만약에 리스트에 money 가 있으면 , True
+    print('택시를 타고 가라')
+    pass                # pass 이후의 실행문은 실행되지 않는다.
+else :
+    print('걸어가라')
+# (4) 다양한 조건을 판단하는 elif
+pocket = ['paper' , 'cellphone']
+card = True
+if 'money' in pocket :
+    print('택시를 타고 가라`')
+elif card :
+    print('택시를 타고 가라')
+else :
+    print('걸어가라')
+
+# (5) 조건부 표현식 , if 대신에 간단한 조건문 표현
+    # 참일경우 if 조건문 else 거짓일경우
+score = 80
+message = 'success' if score >= 60 else 'failure'
+print( message )    # success
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
