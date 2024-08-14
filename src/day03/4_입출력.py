@@ -22,7 +22,7 @@ print( "python" + " is fun")
 # ,쉼표를 이용한 문자열 연결
 print( "python" , "is fun")
 # 출력후 결과값을 변경하기 , 줄바꿈 대신에 다른 문자열 넣을수 있다.
-print( 'python' , end=" ")  # end=" " 해당 print() 출력후 줄바꿈 대신 띄어쓰기
+print( 'python' , end=" ")  # end=" " 해당 print() 출력후 줄바꿈 대신 띄어 쓰기
 print( 'is fun')
 
 
