@@ -9,22 +9,55 @@
 # [조건4] : 최대한 리스트타입 사용하지 않기.
 # 제출 : git에 commit 후 카톡방에 해당 과제가 있는 링크 제출
 
-# 전역 변수
-names = () # 샘플 데이터
-
-# 함수 정의 , def 함수명( 매개변수 , 매개변수 ) :
+# 튜플이란 ? 리스트와 비슷 , 차이점 : 요소의 삽입/삭제가 불가능
+    # 튜플은 불변성을 가진다. 리터럴과 같다.
+    # a = 3 + 2 ,               , 5
+    # a = 'py' + '3'            , py3
+    # a = ( 1 , 2 ) + ( 3 )     , ( 1,2,3)
+names = ( '유재석' , '강호동' , '신동엽') # 샘플 데이터
 def nameCreate( ) :
     global names
+    newName = input('newName : ')
+    names += ( newName , )  # 기존 튜플 과 입력받은값의 튜플 더하기 해서 새로운 튜플 반환
     return
+
 def nameRead( ) :
     global names
+    for name in names : # for 반복변수 in 튜플/리스트/문자열 :
+        print( f'name : {name}' )
     return
+
+
+
+
 def nameUpdate(  ) :
     global names
+    oldName = input( 'oldName : ')
+    if names.count( oldName ) == 0 : return
+    else :
+        newName = input( 'newName : ')
+        newNames = ( )
+        for name in names :
+            if name == oldName :
+                newNames += ( newName , ) # 새로운 이름 대입
+            else :
+                newNames += ( name , ) # 기존 이름 대입
+        newName = newNames
     return
 def nameDelete( ) :
     global names
+    deleteName = input( 'deleteName : ')
+    if names.count( deleteName ) == 0 : return
+    else :
+        newNames = ()               # 새로운 튜플
+        for name in names :         # 튜플에서 하나씩 요소를 반복
+            if name == deleteName : # 만약에 삭제할 요소값과 같으면
+                continue            # 생략
+            else :                  # 같지않으면
+                newNames += ( name , ) # 새로운 튜플에 기존 요소를 누적
+        names = newNames            # 반복문이 종료되면 새로운튜플을 전역변수에 대입
     return
+
 while True :
     ch = int( input('1.create 2.read 3.update 4.delete : ') )
     if ch == 1 : nameCreate( )
