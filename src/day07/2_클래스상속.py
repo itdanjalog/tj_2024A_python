@@ -1,0 +1,2 @@
+class MoreFourCal(FourCal):
+    pass
