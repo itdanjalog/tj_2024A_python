@@ -48,7 +48,14 @@ def nameUpdate(  ) :
         return
     else:
         newName = input('newName : ')
-        names = names.replace( oldName , newName )
+        # names = names.replace( oldName , newName )
+        newNames = ""
+        for name in names.split(',') : # 이름 하나씩 반복
+            if name == oldName : # 수정할 이름과 같으면
+                newNames += f'{''if newNames == ""else ','}{newName}' # 새로운이름
+            else :
+                newNames += f'{''if newNames == ""else ','}{name}' # 기존이름
+        names = newNames # 새로 구성한 이름명단을 전역변수에 대입
     return
 
 def nameDelete( ) :
@@ -60,7 +67,15 @@ def nameDelete( ) :
         return
     else : # 존재하면
         # 문자열.replace( 기존문자 , 새로운문자 ) # 문자열내 기존문자가 존재하면 새로운문자로 치환해서 반환
-        names = names.replace( f',{deleteName}' , '' ) # ,(쉼표)도 같이 삭제
+        # names = names.replace( f',{deleteName}' , '' ) # ,(쉼표)도 같이 삭제
+        # replace는 이름 단위가 아닌 문자 단위 치환 이 되므로 문제가 발생할수도 있다.
+        newNames = ""
+        for name in names.split(',') :
+            if name == deleteName :
+                continue # 가장 가까운 반복문으로 이동
+            else :
+                newNames += f'{ '' if newNames == "" else ','}{name}'
+        names = newNames
     return
 
 while True : # 무한루프 # {} 대신 :과 들여쓰기를 사용 # true 소문자가 아닌 True 대문자로 작성
