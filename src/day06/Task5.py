@@ -47,7 +47,6 @@ def nameCreate( ) :
 
 def nameRead( ) :
     global names
-    global names
     for dic in names : # 리스트내 딕셔너리 하나씩 호출
         print( f'name : { dic['name'] } , age : { dic['age'] }' )  # 딕셔너리변수명[key] 또는 딕셔너리변수명.get( key )
     return
