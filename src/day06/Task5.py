@@ -9,7 +9,7 @@
 # [조건4] : 프로그램이 종료되고 다시 실행되더라도 기존의 names 데이터가 유지 되도록 파일처리 하시오.
 #           - dataLoad() , dataSave() 함수를 정의하여 적절한 위치 에서 호출 하시오.
 # 제출 : git에 commit 후 카톡방에 해당 과제가 있는 링크 제출
-names = [ ] # 샘플 데이터
+names = [ ]
 def dataLoad( ) : # 파일내 데이터를 불러오기
     global names
     return
