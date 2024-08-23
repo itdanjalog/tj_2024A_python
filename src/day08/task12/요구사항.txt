@@ -1,7 +1,7 @@
 task12 : 인천광역시 아파트 매매 실거래가 분석 ( 2023-08-24 ~ 2024-08-23 )
-csv다운로드 : https://rt.molit.go.kr/pt/xls/xls.do
+csv다운로드(국토교통부) : https://rt.molit.go.kr/pt/xls/xls.do
 
-아래 조건에 따라 파이썬에서 자료들을 계산하여 spring서버 index3.html에 각 테이블에 출력하시오.
+아래 조건에 따라 파이썬에서 자료들을 계산하여 spring서버 index4.html에 각 테이블에 출력하시오.
 모든 계산 과 분석은 파이썬에서만 하고 js에서는 출력만 하시오.
 딕셔너리 활용 또는 객체 활용 선택
 
