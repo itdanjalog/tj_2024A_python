@@ -7,4 +7,4 @@ class Region :
         self.female = female
         self.house = house
         self.malepercent = round( (male/total ) * 100 , 1 ) # 남성비율
-        self.malepercent = round( (female / total) * 100, 1 ) # 여성비율
+        self.femalepercent = round( (female / total) * 100, 1 ) # 여성비율
