@@ -34,7 +34,7 @@ def index() : # 매핑 함수
 
 # Flask 프레임워크 실행
 if __name__ == '__main__' :
-    app.run( debug=True )
+    app.run( debug=True ) # debug=True 디버그(콘솔에 정보및오류 출력) 모드
 
 # 콘솔 확인
 # Flask port 확인 : http://127.0.0.1:5000 , http://localhost:5000 , http://192.168.30.9:5000
