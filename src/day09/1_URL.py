@@ -4,8 +4,9 @@
 # [1] urllib.request : URL 요청에 관련 기능을 제공하는 라이브러리
     # 1. urllib.request.Request( URL ) : 지정한 URL에 대한 요청 객체를 반환
     # 2. urllib.request.urlopen( 요청객체 ) : 지정한 요청 객체를 실행하고 응답 객체를 반환
+    # 3. urllib.parse.quote( 문자열 ) : 지정한 문자열을 HTTP 바이트로 변환
     #   2-1 응답객체.getcode() : 응답 상태 반환 ( 2xx : 성공  4xx : 실패 5xx :실패 )
-    #   2-2 응답객체.read() : 응답 내용 모두 읽어오기 # .decode('utf-8') : HTML 형식과 한글 형식 지원
+    #   2-2 응답객체.read() : 응답 내용 모두 읽어오기 # .decode('utf-8') : 바이트형식의 내용을 UTF-8인코딩을 사용하여 문자열로 디코딩
 import urllib.request # 1. request 모듈 호출
 요청할주소 = "https://www.example.com" # 2. 요청을 보낼 url 주소를 가지는 변수
 요청객체 = urllib.request.Request( 요청할주소 ) # 3. Request 객체 생성 # 지정한 URL에 대한 요청을 생성
