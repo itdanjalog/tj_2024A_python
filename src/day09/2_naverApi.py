@@ -81,7 +81,16 @@ def main() :
     print( f'가져온 데이터(무료기준) : { cnt }건')
     # print( jsonResult ) # 확인
 
-
+    # JSON으로 파일 처리
+        # 파일 쓰기 모드 객체 생성
+    file = open( f'{srcText}-naver-{node}.json' , 'w' , encoding='utf-8' )
+        # 월드컵-naver-news.json
+    jsonFile = json.dumps( jsonResult , indent=4 , sort_keys=True , ensure_ascii=False )
+        # json.dumps() : py객체를 JSON 문자열로 반환 함수
+        # 파일 쓰기
+    file.write( jsonFile )
+        # 파일 닫기
+    file.close()
 if __name__ == "__main__" :
     main() # [code1] 메소드 실행
 
