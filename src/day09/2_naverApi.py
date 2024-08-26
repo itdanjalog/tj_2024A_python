@@ -87,6 +87,12 @@ def main() :
         # 월드컵-naver-news.json
     jsonFile = json.dumps( jsonResult , indent=4 , sort_keys=True , ensure_ascii=False )
         # json.dumps() : py객체를 JSON 문자열로 반환 함수
+    '''
+    jsonResult: 이 매개변수는 JSON으로 변환하려는 Python 객체입니다. 예를 들어, Python의 딕셔너리나 리스트가 될 수 있습니다.
+    indent=4: 이 옵션은 JSON 문자열의 들여쓰기 수준을 설정합니다. indent=4는 각 레벨의 들여쓰기를 4개의 공백으로 설정하여 출력된 JSON이 더 읽기 쉬운 형태가 되도록 합니다.
+    sort_keys=True: 이 옵션은 JSON 객체의 키를 알파벳 순서로 정렬합니다. True로 설정하면 딕셔너리의 키가 정렬되어 출력됩니다. 기본값은 False로, 이 경우 원래 딕셔너리의 키 순서가 유지됩니다.
+    ensure_ascii=False: 이 옵션은 JSON 문자열에서 비-ASCII 문자를 그대로 출력할지를 결정합니다. False로 설정하면, UTF-8 인코딩으로 비-ASCII 문자가 그대로 포함됩니다. 기본값은 True로, 이 경우 비-ASCII 문자는 Unicode 이스케이프 시퀀스로 변환됩니다.
+    '''
         # 파일 쓰기
     file.write( jsonFile )
         # 파일 닫기
