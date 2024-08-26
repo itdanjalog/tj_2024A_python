@@ -81,22 +81,25 @@ def main() :
     print( f'가져온 데이터(무료기준) : { cnt }건')
     # print( jsonResult ) # 확인
 
-    # JSON으로 파일 처리
-        # 파일 쓰기 모드 객체 생성
-    file = open( f'{srcText}-naver-{node}.json' , 'w' , encoding='utf-8' )
-        # 월드컵-naver-news.json
+    # (방법1) PY 객체를 JSON형식(문자열) 변환후 파일 처리 # with open() as 파일변수명 : # with 종료시 자동으로 파일닫기
+    with open( f'{srcText}-naver-{node}.json' , 'w' , encoding='utf-8' ) as file :
+        jsonFile = json.dumps( jsonResult , indent=4 , sort_keys=True , ensure_ascii=False )
+        file.write( jsonFile ) # 파일 쓰기
+'''
+    # (방법2)  PY 객체를 JSON형식(문자열) 변환후 파일 처리
+    file = open( f'{srcText}-naver-{node}.json' , 'w' , encoding='utf-8' ) # 파일 쓰기 모드 객체 생성 # # 월드컵-naver-news.json
+        # 2. json.dumps() : py객체를 JSON형식의 문자열로 반환 함수
+            # json.dumps( 변환할PY객체 , indent=들여쓰기수준 , sort_keys=알바벳으로정렬 , ensure_ascii=아스키문자 )
+            # (1) 변환할py객체 : 딕셔너리 또는 리스트 # jsonResult : 검색 결과를 정리하여 저장할 리스트 변수
+            # (2) indent : 생략시 들여쓰기없음 , 주로 4 정도가 가독성이 좋다.
+            # (3) sort_keys : True( key값 기준으로 알파벳순 정렬 ) , False( 딕셔너리 키 순서대로 )
+            # (4) ensure_ascii : False( UTF-8 인코딩으로 비아스키코드 문자 - 주로 한글 ) True( 아스키코드 문자 )
     jsonFile = json.dumps( jsonResult , indent=4 , sort_keys=True , ensure_ascii=False )
-        # json.dumps() : py객체를 JSON 문자열로 반환 함수
-    '''
-    jsonResult: 이 매개변수는 JSON으로 변환하려는 Python 객체입니다. 예를 들어, Python의 딕셔너리나 리스트가 될 수 있습니다.
-    indent=4: 이 옵션은 JSON 문자열의 들여쓰기 수준을 설정합니다. indent=4는 각 레벨의 들여쓰기를 4개의 공백으로 설정하여 출력된 JSON이 더 읽기 쉬운 형태가 되도록 합니다.
-    sort_keys=True: 이 옵션은 JSON 객체의 키를 알파벳 순서로 정렬합니다. True로 설정하면 딕셔너리의 키가 정렬되어 출력됩니다. 기본값은 False로, 이 경우 원래 딕셔너리의 키 순서가 유지됩니다.
-    ensure_ascii=False: 이 옵션은 JSON 문자열에서 비-ASCII 문자를 그대로 출력할지를 결정합니다. False로 설정하면, UTF-8 인코딩으로 비-ASCII 문자가 그대로 포함됩니다. 기본값은 True로, 이 경우 비-ASCII 문자는 Unicode 이스케이프 시퀀스로 변환됩니다.
-    '''
-        # 파일 쓰기
-    file.write( jsonFile )
-        # 파일 닫기
-    file.close()
+    file.write( jsonFile ) # 파일 쓰기
+    file.close() # 파일 닫기
+'''
+
+
 if __name__ == "__main__" :
     main() # [code1] 메소드 실행
 
