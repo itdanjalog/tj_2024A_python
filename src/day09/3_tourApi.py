@@ -1,4 +1,4 @@
-# day09 > 3_tourApi.py
+# 크롤링 > 3_tourApi.py
 # 준비
 # (1)공공데이터포털 : https://www.data.go.kr -> 로그인
 # (2)출입국관광통계서비스 검색

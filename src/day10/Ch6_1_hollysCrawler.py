@@ -14,12 +14,11 @@ def hollys_store(result):
             if len(store) <= 3:
                 break
             store_td = store.find_all('td')
-            store_name = store_td[1].string
-            store_sido = store_td[0].string
-            store_address = store_td[3].string
-            store_phone = store_td[5].string
-            result.append([store_name]+[store_sido]+[store_address]
-                          +[store_phone])
+            store_name = store_td[1].text
+            store_sido = store_td[0].text
+            store_address = store_td[3].text
+            store_phone = store_td[5].text
+            result.append([store_name,store_sido,store_address,store_phone])
         print( result )
     return
 
@@ -29,8 +28,8 @@ def main():
     print('Hollys store crawling >>>>>>>>>>>>>>>>>>>>>>>>>>')
     hollys_store(result)   #[CODE 1] 호출 
     print( result )
-    #hollys_tbl = pd.DataFrame( result, columns=( 'store', 'sido-gu', 'address','phone'))
-    #hollys_tbl.to_csv('hollys.csv', encoding='cp949', mode='w', index=True ,  index_label=['index'] )
+    hollys_tbl = pd.DataFrame( result, columns=( 'store', 'sido-gu', 'address','phone'))
+    hollys_tbl.to_csv('hollys.csv', encoding='cp949', mode='w', index=True ,  index_label=['index'] )
 
 if __name__ == '__main__':
      main()

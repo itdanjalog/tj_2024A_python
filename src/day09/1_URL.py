@@ -1,4 +1,4 @@
-# day09 > 1_URL_py
+# 크롤링 > 1_URL_py
 # urllib : URL 작업을 위한 여러 모듈을 모은 패키지
 
 # [1] urllib.request : URL 요청에 관련 기능을 제공하는 라이브러리

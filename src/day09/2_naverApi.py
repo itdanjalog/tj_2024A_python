@@ -1,4 +1,4 @@
-# day09 > 2_naverApi.py
+# 크롤링 > 2_naverApi.py
 #
 import json
 import urllib.request
