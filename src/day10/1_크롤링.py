@@ -4,8 +4,23 @@
 '''
     [1] 설치
         from bs4 import BeautifulSoup
-    [2] HTML 파싱
-        변수명 = BeautifulSoup( html파일객체 , "html.parser" )
+    [2] HTML 객체 파싱
+        변수명 = BeautifulSoup( openhtml파일객체 , "html.parser" )
+        변수명 = BeautifulSoup( html형식의문자열 , "html.parser" )
+    [3] 파싱 메소드 , 속성
+        1. .find( 식별자 , 속성명 = 값 )   : 지정한 식별자 과 속성명 동일한 태그 조회
+            find( div )
+            find( div , class_="box1" )
+            find( div , id = "box2" )
+        2. .select_one()
+            select_one( div 또는 .box1 또는 #box2 )
+        3. .findAll() : 지정한 식별자가 일치한 여러개 태그 추출해서 리스트로 반환
+        4. .select()
+        -
+            .태그명    : 해당 태그들의 첫번째태그 추출
+            .text     : 마크업 사이의 문자열 반환 , 자식 , 자손 가능 , 주로 중첩텍스트 일때
+            .string   : 마크업 사이의 문자열 , 자식만 가능 , 자손 불가능 , 주로 단일텍스트 일떄
+            .attrs   : 해당 마크업의 속성 목록/리스트 반환
 '''
 # [1] 설치
 from bs4 import BeautifulSoup
@@ -66,6 +81,16 @@ print( soup.a) # <a class="login" href="http://wwww.hanbit.co.kr/member/login.ht
 print( soup.findAll( "ul" ) ) #
 print( soup.findAll( 'li' )) #
 print( soup.findAll( 'a')) #
+# .attrs : 지정한 마크업의 속성 목록을 딕셔너리 반환
+print( soup.findAll( 'a')[0].attrs ) # {'href': 'http://wwww.hanbit.co.kr/member/login.html', 'class': ['login'] }
+print( soup.findAll( 'a')[0]['href'] ) # http://wwww.hanbit.co.kr/member/login.html
+print( soup.findAll( 'a')[0]['class'] ) # ['login']
+print( soup.find( 'ul' , attrs={ 'class' : 'brand'})) # vs find( 마크업 , class_='클래스명' )
+print( soup.find( id="title") ) # vs .select_one(#ID명)
+li_list = soup.select( 'div > ul.brand>li ')
+for li in li_list :
+    print( li.string )
+
 
 
 
