@@ -33,12 +33,13 @@ sr7 = pd.Series( data2 , index= data1 )
 print( sr7 )
 
 sr8 = pd.Series( data2 , index= sr4 )
+print("--------------------------------------")
 print( sr8 )
 
 # 6.
-print( sr8.iloc[2] ) # ????
+print( sr8[2] ) # ????
 print( sr8['수'] )
-print( sr8.iloc[-1] )
+print( sr8[-1] )
 #
 print( sr8[0:4] )
 #
@@ -122,7 +123,6 @@ df.to_csv('example.csv', index=False)
 loaded_df = pd.read_csv('example.csv')
 print("\nCSV 파일에서 불러온 데이터프레임:")
 print(loaded_df)
-
 
 
 
