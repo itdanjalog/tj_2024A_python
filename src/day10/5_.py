@@ -1,16 +1,18 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import urllib.request
 
-
-wd = webdriver.Chrome() #교재 코드 수정
-
-wd.get("https://finance.naver.com/")
-
-html = wd.page_source
+# wd = webdriver.Chrome() #교재 코드 수정
+#
+# wd.get("https://finance.naver.com/")
+#
+# html = wd.page_source
 
 #print( html )
+response = urllib.request.urlopen('https://finance.naver.com/' )
 
-soupCB = BeautifulSoup(html, 'html.parser')
+soupCB = BeautifulSoup( response.read() ,'html.parser' , from_encoding='euc-kr')
+#soupCB = BeautifulSoup( html, 'html.parser')
 store_name_h2 = soupCB.select("#_topItems1 > .up")
 # print(store_name_h2)
 
