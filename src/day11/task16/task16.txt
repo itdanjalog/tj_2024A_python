@@ -2,7 +2,7 @@
 - 기본URL : https://www.jobkorea.co.kr/Search/?stext=java
 - 검색결과의 모든 채용공고를 크롤링 서비스 만들기
 - 채용공고 정보 파싱 : 회사명 , 공고명 , 경력 , 학력 , 계약유형 , 지역 , 채용기간
-- [조건1] 페이지수를 계산 : 총 채용공고수 , 페이지당 공고수  활용 하여 계산
+- [조건1] 1페이지만 크롤링합니다. ( 많은 요청에 따른 페이지 과부하 로 느린 관계로 )
 - [조건2] 크롤링 한 결과를 CSV 변환 서비스
 - [조건3] CSV 파일을 JSON 변환 서비스
 - [조건4] Spring : index5.html , py : task16 > appstart.py , service.py , controller.py 파일만 사용.
