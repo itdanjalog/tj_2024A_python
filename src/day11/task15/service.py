@@ -28,6 +28,7 @@
 from bs4 import BeautifulSoup
 import urllib.request
 import pandas as pd
+import json
 
 # [1] 쿠우쿠우 매장 정보 크롤링 서비스
 def qooqooStoreInfo( result ) :
@@ -76,11 +77,28 @@ def list2d_to_csv( result , fileName , colsNames ) :
         print( e )
         return False
 
-# 서비스 테스트 확인 구역
-if __name__ == "__main__" :
-    result = []
-    qooqooStoreInfo( result ); print( result ); # 쿠우쿠우 매장 정보 크롤링 서비스 호출
-    list2d_to_csv( result , '전국쿠우쿠우매장' , [ '번호','지점명','연락처','주소','영업시간'] )# 매장정보를 csv 로 저장 서비스 호출
+# [3] csv 파일을 JSON 형식의 PY타입으로 가져오기 , 가져올파일명
+def read_csv_to_json( fileName ) :
+    # 1. 판다스를 이용한 csv를 데이터프레임으로 가져오기
+    df = pd.read_csv( f'{fileName}.csv' , encoding='utf-8',engine='python', index_col=0)
+        # index_col=0 : 판다스의 데이터프레임워크 형식 유지 ( 테이블형식 )
+    # 2. 데이터프레임 객체를 JSON 으로 가져오기
+    jsonResult = df.to_json( orient='records' , force_ascii=False)
+        # to_json() : 데이터프레임 객체내 데이터를 JSON 변환함수
+            # orient='records' : 각 행마다 하나의 JSON 객체로 구성
+            # force_ascii=False : 아스키 문자 사용 여부 : True(아스키) , False(유니코드 utf-8)
+    # 3. JSON 형식(문자열타입) 의 py타입(객체타입-리스트/딕셔너리)으로 변환
+    result = json.loads( jsonResult ) # import json 모듈 호출 # json.loads() 문자열타입(json형식) ---> py타입(json형식) 변환
+    return result
+
+
+# # 서비스 테스트 확인 구역
+# if __name__ == "__main__" :
+#     result = []
+#     qooqooStoreInfo( result ); print( result ); # 쿠우쿠우 매장 정보 크롤링 서비스 호출
+#     list2d_to_csv( result , '전국쿠우쿠우매장' , [ '번호','지점명','연락처','주소','영업시간'] )# 매장정보를 csv 로 저장 서비스 호출
+#     result2 = read_csv_to_json('전국쿠우쿠우매장') # csv파일을 json 으로 가져오는 서비스 호출
+#     print( result2 )
 
 
 
