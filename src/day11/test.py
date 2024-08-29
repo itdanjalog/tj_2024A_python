@@ -94,6 +94,8 @@ import statsmodels.api as sm
 others = list(set(wine.columns).difference(set(["quality", "fixed_acidity"])))
 p, resids = sm.graphics.plot_partregress("quality", "fixed_acidity", others, data = wine, ret_coords = True)
 plt.show()
+
+
 fig = plt.figure(figsize = (8, 13))
 sm.graphics.plot_partregress_grid(regression_result, fig = fig)
 plt.show()
