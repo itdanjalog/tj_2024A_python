@@ -49,7 +49,7 @@ store_address = store_address_list[0]
 print( store_address )
 
 # 6-3 매장 전화번호
-store_phone = store_info[3].strin
+store_phone = store_info[3].string
 print( store_phone )
 
 
