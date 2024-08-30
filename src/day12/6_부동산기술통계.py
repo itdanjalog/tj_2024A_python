@@ -14,9 +14,11 @@ import pandas as pd
 import json
 from flask import Flask # [1] 플라스크 모듈 가져오기
 app = Flask(__name__)   # [2] 플라스크 객체 만들기
+# [*] CORS 허용
+from flask_cors import CORS
+CORS( app )
 
-df = pd.read_csv( '아파트(전월세)_실거래가_20240830092537.csv' , encoding='cp949' , skiprows=15 )
-    # encoding='utf-8'  : 기본값(생략시) 안될경우 cp949  # skiprows= 몇번째행까지스킵행번호 : 특정 행을 제외한 csv 읽어오기
+df = pd.read_csv( '아파트(전월세)_실거래가_20240830092537.csv' , encoding='cp949' , skiprows=15 ) # encoding='utf-8'  : 기본값(생략시) 안될경우 cp949  # skiprows= 몇번째행까지스킵행번호 : 특정 행을 제외한 csv 읽어오기
 #[4] 플라스크 HTTP 매핑 정의
     # 1.
 @app.route( "/trans1" , methods=['get'] ) # 테스트 (GET)http://127.0.0.1:5000/trans1
