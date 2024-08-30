@@ -18,7 +18,16 @@ app = Flask(__name__)   # [2] 플라스크 객체 만들기
 from flask_cors import CORS
 CORS( app )
 
-df = pd.read_csv( '아파트(전월세)_실거래가_20240830092537.csv' , encoding='cp949' , skiprows=15 ) # encoding='utf-8'  : 기본값(생략시) 안될경우 cp949  # skiprows= 몇번째행까지스킵행번호 : 특정 행을 제외한 csv 읽어오기
+# * 1년씩 csv 파일을 수집한다.  2022.csv , 2023.csv , 2024.csv
+
+# 전체 데이터프레임 객체 생성
+df = pd.DataFrame() # 빈 데이터프레임
+for year in range( 2022 , 2025 ) : # 2022 ~ 2024
+    # 각 년도별 csv 파일을 반복문 통해 여러번 호출한다.
+    df2 = pd.read_csv( f'{ year }.csv' , encoding='cp949' , skiprows=15 ) # encoding='utf-8'  : 기본값(생략시) 안될경우 cp949  # skiprows= 몇번째행까지스킵행번호 : 특정 행을 제외한 csv 읽어오기
+    print( df2.shape ) # .shape : 레코드수 , 열개수 확인
+    df = pd.concat( [ df , df2 ] ) # 기존 데이터프레임 에 새로운 데이터프레임 연결/연장
+print( df.shape )  # (37031, 21)
 #[4] 플라스크 HTTP 매핑 정의
     # 1.
 @app.route( "/trans1" , methods=['get'] ) # 테스트 (GET)http://127.0.0.1:5000/trans1
