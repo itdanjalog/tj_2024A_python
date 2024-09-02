@@ -50,7 +50,7 @@ from statsmodels.formula.api import ols, glm
 red_wine_quality = wine.loc[wine['type'] == 'red', 'quality']
 white_wine_quality = wine.loc[wine['type'] == 'white', 'quality']
 print( stats.ttest_ind(red_wine_quality, white_wine_quality, equal_var = False) )
-#Ttest_indResult(statistic=-10.149363059143164, pvalue=8.168348870049682e-24)
+#Ttest_indResult(statistic=-10.149363059143164, pvalue=8.168348870049682e-24) # 0.000000000000000000000008168348870049682
 
 Rformula = 'quality ~ fixed_acidity + volatile_acidity + citric_acid + residual_sugar + chlorides + free_sulfur_dioxide + total_sulfur_dioxide + density + pH + sulphates + alcohol'
 regression_result = ols(Rformula, data = wine).fit()
