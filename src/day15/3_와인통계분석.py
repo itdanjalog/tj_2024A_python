@@ -6,10 +6,10 @@
 # 2. 데이터준비 :
 # 2-1 : csv 파일의 열 구분자를 ;세미콜론 --> ,쉼표 변경 하여 csv 파일를 새로 만들기
 import pandas as pd
-red_pd = pd.read_csv( 'winequality-red.csv' , sep=';' , header= 0 , engine='python')
+red_pd = pd.read_csv('../day16/winequality-red.csv', sep=';', header= 0, engine='python')
     # sep = 'csv구분자' # 기본값은 ,(쉼표)
     # header : = 0 첫번째 행을 열 이름으로 지정하겠다는 뜻
-white_pd = pd.read_csv( 'winequality-white.csv' , sep=';' , header= 0 , engine='python' )
+white_pd = pd.read_csv('../day16/winequality-white.csv', sep=';', header= 0, engine='python')
 ## 새로운 csv 만들기
 red_pd.to_csv( 'winequality-red2.csv' , index=False)
     #  index=False : 데이터프레임 의 인덱스 열은 CSV 파일에 포함하지 않는다.
@@ -137,14 +137,4 @@ Intercept(절편)  : 독립변수가 0 일때 종속변수의 예측값 # X가 0
         - [0.025      0.975] : 앞뒤 2.5% 버리고 사이에 존재하면 신뢰할수 있는 구간 뜻 한다.
        
 '''
-
-
-
-
-
-
-
-
-
-
 
