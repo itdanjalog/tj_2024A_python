@@ -174,6 +174,9 @@ import seaborn as sns
 
 sns.set_style('dark')
 sns.histplot(레드와인등급집단, kde = True, color = "red", label = 'red wine')
+# kde = True : 커널 밀도 추정
+# 밀도는 어떤 값 또는 구간에 데이터가 얼마나 집중되어 있는지를 나타내는 값입니다.
+
 sns.histplot(화이트와인등급집단, kde = True, label = 'white wine')
 plt.title("Quality of Wine Type")
 plt.legend()
@@ -181,15 +184,44 @@ plt.show()
 
 #####################################
 import statsmodels.api as sm
+# statsmodels는 통계 모델링과 회귀 분석을 위한 파이썬 라이브러리입니다.
+
 others = list(set(wine.columns).difference(set(["quality", "fixed_acidity"])))
+# others: wine 데이터프레임의 모든 열 이름에서 quality와 fixed_acidity를 제외한 나머지 열 이름들로 구성된 리스트를 생성합니다.
+# set(wine.columns)는 wine 데이터프레임의 모든 열 이름을 집합으로 변환합니다.
+
 p, resids = sm.graphics.plot_partregress("quality", "fixed_acidity", others, data = wine, ret_coords = True)
+# sm.graphics.plot_partregress는 부분 회귀 플롯을 생성하는 함수입니다.
+    # "quality": 종속 변수입니다. quality는 와인의 품질을 나타냅니다.
+    # "fixed_acidity(어시디티)": 독립 변수입니다. fixed_acidity는 고정 산도이며, 와인의 산도 특성 중 하나입니다.
+    # others: 나머지 독립 변수 리스트입니다. fixed_acidity와 quality의 관계에서 다른 변수들이 미치는 영향을 제거하기 위해 사용됩니다.
+    # data=wine: 분석에 사용되는 데이터프레임입니다. wine 데이터프레임이 여기에 해당합니다.
+    # ret_coords=True: 플롯을 생성하는 것 외에도, 계산된 좌표를 반환합니다. 이 값들은 p와 resids에 저장됩니다.
+        # 회귀 분석에서 실제 데이터와 회귀 모델이 예측한 값의 차이를 의미
+        # resids: 잔차(Residual/리지주얼) 값을 포함한 좌표 데이터입니다. 이 값들은 회귀 분석의 잔차를 나타냅니다.
+'''
+예를 들어, 주택 가격을 예측하는 모델을 만들었다고 가정해 봅시다. 
+어떤 집의 실제 가격이 100,000만원인데, 모델이 예측한 가격이 80,000달러라면, 이 집에 대한 잔차는 20,000달러입니다.
+잔차가 0에 가까울수록: 모델이 그 데이터 포인트를 잘 예측했다는 의미입니다.
+잔차가 크면: 모델이 그 데이터 포인트를 잘 예측하지 못했음을 나타냅니다.
+잔차는 회귀 분석에서 모델의 성능을 평가하고 개선할 부분을 찾는 데 매우 중요한 역할을 합니다.
+'''
 plt.show()
 
 #####################################
 
 fig = plt.figure(figsize = (8, 13))
+# 가로 8인치, 세로 13인치로 지정되었습니다. 이 크기는 플롯의 시각적 크기를 조절하는 데 사용됩니다.
+
 sm.graphics.plot_partregress_grid(선형회귀모델결과, fig = fig)
 plt.show()
+
+'''
+각 플롯에서, 독립 변수와 종속 변수 간의 선형 관계의 강도를 확인합니다.
+기울기, 잔차의 패턴, 점들의 분포 등을 관찰하여 독립 변수가 종속 변수에 미치는 영향을 평가합니다.
+플롯이 선형적이고 잔차가 무작위로 분포한다면, 모델이 데이터를 잘 설명하고 있다고 볼 수 있습니다. 
+반대로, 패턴이 존재하거나, 점들이 선형에서 크게 벗어난다면, 모델을 개선할 필요가 있을 수 있습니다.
+'''
 
 
 
