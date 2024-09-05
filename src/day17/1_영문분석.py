@@ -123,27 +123,60 @@ for ( tag , counts ) in count.most_common(50) :
     #print( tag )
     #print( counts )
     if( len(tag) > 1  ) : # 만약에 단어길이 가 1 초과 이면 # 단어가 1글자인 단어는 제외
-        word_count[tag] = counts
+        word_count[tag] = counts # 딕셔너리에 단어를 key로 하고 빈도수를 value 하여 쌍(엔트리) 저장
 print( word_count )
 
+# [11] 히스토그램
+# plt.bar( x축값 , y축값 )
+# plt.bar( [ 1 , 2 ,3 ] , [ 4,5, 6] )
+    # 딕셔너리.keys() : 딕셔너리내 모든 key값 호출 반환 , 딕셔너리.keys() : 딕셔너리내 모든 value값 호출 반환 ,
+# plt.bar( word_count.keys()  , word_count.values()  )
+    # x축에 단어(keys)들 , y축 단어빈도수(values)들
 
+# 딕셔너리 정렬 방법  # sorted( 딕셔너리 , key = 정렬기준 , reverse = True )
+sorted_Keys = sorted( word_count , key = word_count.get , reverse=True )
+    # key = word_count.get 는 get 메소드를 참조하여 각 키를 value(빈도수) 기준으로 정렬
+    # reverse=True 는 내림차순 뜻 , 생략시 오름차순
+# print( sorted_keys ) # ['data', 'big', 'analytics', 'analysis' ]
 
+sorted_Values = sorted( word_count.values() , reverse=True )
+# print( sorted_keys ) # [1645, 1354, 137, 67 ]
 
+# print( range( len( word_count ) ) ) # range( 0 , 50 ) # 0 부터 49
+plt.bar(range(len(word_count)), sorted_Values, align='center')
+plt.xticks(range(len(word_count)), list(sorted_Keys), rotation=85)
 
+# 차트 실행
+plt.show()
 
+# [12] 결과 시각화
+all_files_data_concat['doc_count'] = 0 # 데이터프레임의 필드(열) 추가
+# print( all_files_data_concat['doc_count'] )
+    # 출판일 별로 'doc_count' 의 기술통계
+summary_year = all_files_data_concat.groupby( '출판일' , as_index=False )['doc_count'].count()
+                #  데이터프레임 에서 '출판일' 열 기준으로 그룹화 하고
+                # as_index=False 그룹화 할때 인덱스는 제외
+                # .count() : 행 개수
+# print( summary_year )
+# plt.plot( [ 1, 2 , 3 ] , [ 4 , 5 , 6 ] )
+# plt.plot( summary_year['출판일'] , summary_year['doc_count'] )
+plt.grid( True )
+plt.plot( range(len( summary_year) ) , summary_year['doc_count'] )
+plt.xticks( range(len( summary_year) ) , [ text for text in summary_year['출판일'] ] )
+# 차트 표시
+plt.show()
 
+# [13] 워드 클라우드
+    # (1)문자열타입의 텍스트들의 워드 클라우드
+# wc = WordCloud( ).generate("문자열타입")
+    # (2)딕셔너리타입의 텍스트들의 워드 클라우드
+# wc = WordCloud().generate_from_frequencies( "딕셔너리타입" )
+wc = WordCloud().generate_from_frequencies( word_count )
+plt.imshow( wc )
+plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
+# 워드 클라우드 결과 이미지 저장
+wc.to_file( "wordCloud.jpg")
 
 
 
