@@ -1,10 +1,20 @@
 # 9장. 지리 정보 분석 (2) 행정구역별 데이터 분석 + 블록맵
 # ======================================== ======================================== #
 # 1. 데이터 준비 및 탐색
+
+# Pandas의 특정 옵션을 설정하여 경고 메시지나 불필요한 정보를 숨기는 것입니다.
 import warnings
 warnings.filterwarnings(action='ignore')
+
 import pandas as pd
 pd.set_option('mode.chained_assignment',  None) # Warning 방지용
+'''
+Pandas에서 체인 인덱싱 경고(Chained Assignment Warning)를 무시하는 설정입니다.
+mode.chained_assignment: Pandas에서 데이터 프레임의 일부를 슬라이스하거나 복사본을 만들 때, 
+체인된 인덱싱이 발생할 수 있습니다. 이는 복잡한 인덱싱이나 할당 중에 의도치 않은 부작용을 발생시킬 수 있어서 
+Pandas는 경고 메시지를 출력합니다.
+'''
+
 import numpy as np
 data = pd.read_csv('공공보건의료기관현황.csv', index_col=0, encoding='CP949', engine='python')
 print( data.head() ) #작업내용 확인용 출력
@@ -154,6 +164,7 @@ plt.rcParams["figure.figsize"] = (25,5)
 MC_ratio.plot(kind='bar', rot=90)
 plt.show()
 
+"""
 # 2) 블록맵 시각화
 # (1) 블록맵 데이터 파일 열기
 import os
@@ -258,7 +269,7 @@ draw_blockMap(data_draw_korea_MC_Population_all, 'count', '행정구역별 공�
 draw_blockMap(data_draw_korea_MC_Population_all, 'MC_ratio', '행정구역별 인구수 대비 공공보건의료기관 비율', 'Reds' )
 
 
-
+"""
 
 
 

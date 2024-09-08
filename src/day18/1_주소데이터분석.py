@@ -50,13 +50,21 @@ print( addr2 )
 
 addr2 = pd.DataFrame(addr2, columns=['address2'])
 
+
 print( addr2 )
 
 # ======================================== ======================================== #
 
 CB2 = pd.concat([CB, addr2],  axis=1 )
+'''
+axis=1: axis는 결합 방향을 지정하는 옵션입니다.
+axis=0은 행(row) 방향으로 데이터를 결합합니다 (위아래로 결합).
+axis=1은 열(column) 방향으로 데이터를 결합합니다 (좌우로 결합)
+'''
 
 print(CB2.head() ) #작업 내용 확인용 출력
+
+# ------------> 지도 시각화을 할지말지 고민해보기...
 
 # ======================================== ======================================== #
 # - 지도 정보 시각화 라이브러리 설치 및 임포트하기
@@ -64,9 +72,11 @@ CB2.to_csv('CoffeeBean_2.csv',encoding='CP949', index = False)
 # ======================================== ======================================== #
 
 # 1) 숭례문 좌표를 사용하여 지도 객체 테스트하기
-import folium
-map_osm = folium.Map(location=[37.560284, 126.975334], zoom_start = 16)
-map_osm.save('map.html')
+# import folium
+# map_osm = folium.Map(location=[37.560284, 126.975334], zoom_start = 16)
+# # 부평역 ( http://map.esran.com/ )
+# # map_osm = folium.Map(location=[37.4895207734621, 126.72341040690884], zoom_start = 16)
+# map_osm.save('map.html')
 
 # ======================================== ======================================== #
 # 2) 정리해둔 CoffeeBean_2.csv 파일 로드
@@ -76,6 +86,7 @@ print( CB_file.head() ) #작업 내용 확인용 출력
 # ======================================== ======================================== #
 
 # 3) 지오서비스웹(GEOSERVICE-WEB)을 사용하여 구한 GPS 좌표 파일 로드
+# http://www.gisdeveloper.co.kr/?p=4784
 '''
 CB_geoData = pd.read_csv('CB_geo_sph_2.csv',encoding='utf8',  engine='python')
 print( len(CB_geoData) ) #작업 내용 확인용 출력
@@ -87,8 +98,8 @@ for i, store in CB_geoData.iterrows():
 map_CB.save('map_CB.html')
 '''
 
-import webbrowser
-webbrowser.open('map_CB.html')
+# import webbrowser
+# webbrowser.open('map_CB.html')
 
 
 
