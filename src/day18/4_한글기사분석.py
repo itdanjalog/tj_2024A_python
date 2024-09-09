@@ -43,7 +43,8 @@ for word , count in bestWords :
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
-wc = WordCloud( "c:/windows/fonts/malgun.ttf" ).generate_from_frequencies( wordsDict )
+font_path = "c:/windows/fonts/malgun.ttf"
+wc = WordCloud( font_path ).generate_from_frequencies( wordsDict )
 
 plt.imshow( wc )
 plt.show()
