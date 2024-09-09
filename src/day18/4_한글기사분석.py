@@ -39,6 +39,24 @@ for word , count in bestWords :
 
 # 4. 시각화 ( 히스토그램 , 워드클라우드 )
 
+# 히스토그램
+import matplotlib.pyplot as plt
+from matplotlib import font_manager , rc # 맷플롯립 에서 폰트 관련 객체
+import matplotlib
+# 맷플롯립 에서 한글화
+# 3-1 시스템(컴퓨터) 폰트의 경로가 명확 하지 않을때
+    # (1) 폰트 경로
+font_path = "c:/windows/fonts/malgun.ttf" # 윈도우 기준의 폰트가 설치된 경로 : c:/windows/fonts/폰트명
+    # (2) 폰트 설정 객체를 이용한 폰트 설정
+font_name = font_manager.FontProperties( fname= font_path ).get_name() # 지정한 경로의 폰트 파일에서 폰트 이름을 가져옴
+    # (3) 차트에 적용
+matplotlib.rc( 'font' , family = font_name )
+
+plt.bar( wordsDict.keys() , wordsDict.values() ) # plt.bar( x축값 , y축값 )
+plt.xticks( rotation = 75 ) # x축 레이블 기울기
+plt.show() # 차트 열기
+
+
 # 워드클라우드
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
