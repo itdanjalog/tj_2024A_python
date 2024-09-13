@@ -67,6 +67,31 @@ y_predict = lr_b_cancer.predict( x_test ) # 이진 분류 예측
 # print( lr_b_cancer.predict_proba( x_test )) # 이진 확률 예측
 # [ [9.98656121e-01 1.34387864e-03] , [3.85539075e-02 9.61446092e-01] ~~~  ]
 
+# [4] 모델의 성능 평가
+# 1.
+from sklearn.metrics import  confusion_matrix , accuracy_score , precision_score ,  recall_score , f1_score , roc_auc_score
+print( confusion_matrix( y_test , y_predict ) ) #
+'''
+[[ 60   3]      [ [ TN , FP ]
+ [  1 107]]       [ FN , TP ] ]
+'''
+# 2. 정확도
+print( accuracy_score( y_test , y_predict ) )       # 0.9766081871345029    # 97% 이상    # 모델이 전체 데이터에서 얼마나 잘 예측 했는지??
+# 3. 정밀도
+print( precision_score( y_test , y_predict ) )      # 0.9727272727272728    # 97% 이상    # 모델이 양성으로 예측한 것들 중에서 실제 양성 비율
+# 4. 재현율
+print( recall_score( y_test , y_predict ) )         # 0.9907407407407407    # 97% 이상    # 실제 양성 중에서 모델이 얼마나 잘 양성으로 예측 했는지??
+# 5. F1스코어
+print( f1_score( y_test , y_predict ) )             # 0.981651376146789     # 97% 이상    # 정밀도 와 재현율의 균형
+# 6. ROC 기반 AUC 스코어
+print( roc_auc_score( y_test , y_predict ) )        # 0.9715608465608465    # 97% 이상    # 모델이 양성과 음성을 구별하는 능력 평가
+    # 5 가지의 모델 평가 지수 계산 방법 # 1(100%)에 가까울수록 모델은 예측을 잘 표현하고 있다. # 대략 85% 이상이면 신뢰도 높다.
+
+
+
+
+
+
 
 
 
