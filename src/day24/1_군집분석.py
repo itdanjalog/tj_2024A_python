@@ -97,3 +97,74 @@ plt.title('KMeans')
 plt.colorbar(label='군집')
 plt.legend()
 plt.show()
+
+
+
+import matplotlib.pyplot as plt
+
+# 가상의 SSE 데이터 예시 # 이 경우, 3이 최적의 클러스터 수로 판단될 수 있습니다.
+cluster_count = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+sse = [400, 200, 100, 80, 75, 70, 68, 67, 66, 65]  # 예시 데이터
+
+plt.plot(cluster_count, sse, marker='o')
+plt.xlabel('Number of Clusters')
+plt.ylabel('SSE')
+plt.title('Elbow Method Example')
+plt.xticks(cluster_count)
+plt.grid()
+plt.show()
+
+
+# 최적의 클러스터 수 ( 엘보우 )
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+sse = []
+cluster_range = range(1, 11)
+
+for n_clusters in cluster_range:
+    kmeans = KMeans(n_clusters=n_clusters, random_state=0)
+    kmeans.fit(scaled_data)
+    sse.append(kmeans.inertia_)  # SSE
+
+plt.plot(cluster_range, sse, marker='o')
+plt.xlabel('Number of Clusters')
+plt.ylabel('SSE')
+plt.title('Elbow Method for Optimal k')
+plt.show()
+'''
+엘보우 방법은 클러스터 수에 따라 KMeans의 **총 제곱 오차(SSE)**를 계산하고, 그 결과를 시각화하여 최적의 클러스터 수를 찾는 방법입니다. SSE는 군집 내의 데이터 포인트와 클러스터 중심 간의 거리를 제곱하여 합한 값입니다.
+
+단계:
+다양한 클러스터 수 (예: 1부터 10까지)에 대해 KMeans를 수행합니다.
+각 클러스터 수에 대해 SSE를 계산합니다.
+SSE를 클러스터 수에 대해 그래프로 그립니다.
+그래프에서 SSE의 변화가 급격히 줄어드는 지점을 찾습니다. 이 지점이 최적의 클러스터 수입니다.
+'''
+
+
+kmeans = KMeans(n_clusters=4)
+kmeans.fit(scaled_data)
+print(kmeans.cluster_centers_) # 이 중심들은 각각의 군집에 속한 과일들의 평균적인 무게와 당도를 나타냅니다.
+# 결과 출력
+df['cluster'] = kmeans.labels_
+print(df)
+
+newData = {
+    'weight': [110],
+    'sweetness': [7]
+}
+newDf = pd.DataFrame( newData )
+scaled_new_data  = scaler.fit_transform(newDf[['weight', 'sweetness']])
+
+new_clusters = kmeans.predict( scaled_new_data  )
+print( new_clusters )
+
+plt.scatter( scaled_data[ : , 0], scaled_data[ : , 1], c=df['cluster'], marker='o', label='old data')
+plt.scatter( scaled_new_data[ : , 0], scaled_new_data[ : , 1], c='red', marker='^', label='new data')
+plt.xlabel('weight (g)')
+plt.ylabel('sweetness (1-10)')
+plt.title('KMeans')
+plt.colorbar(label='군집')
+plt.legend()
+plt.show()
