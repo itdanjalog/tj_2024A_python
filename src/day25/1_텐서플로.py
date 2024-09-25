@@ -71,6 +71,49 @@ print( vec1 ** 0.5 )    # 제곱근 # .math.sqrt( )
 print( tf.reduce_sum( vec1 ) ) # tf.Tensor(60.0, shape=(), dtype=float32)
 print( vec1 + 1 ) # 브로드캐스팅 # tf.Tensor([11. 21. 31.], shape=(3,), dtype=float32)
 
+# [6] 텐서객체( 2차원 리스트 : 행렬 ) # tf.Tensor([[10 20][30 40]], shape=(행개수=벡터의개수, 열개수=벡터내원소개수), dtype=int32)
+mat1 = tf.constant( [ [10,20] , [30,40] ] ) # 전체를 감싼 대괄호내 원소개수 : 행개수/백터개수 # 내부 대괄호내 원소개수 : 열개수/스칼라개수
+print( mat1 ) # 행 과 열 이라는 축이 2개 라서 랭크/차수 : 2
+# tf.Tensor(  [[10 20][30 40]], shape=(2, 2), dtype=int32)
+# 랭크 확인
+print( tf.rank(mat1) ) # tf.Tensor(2, shape=(), dtype=int32) # 2
+
+# mat2 = tf.stack( 벡터 , 벡터 )
+mat2 = tf.stack( [ [ 1 , 1 ] , [-1,2]  ] ) # 1차원 리스트 2개를 2차원으로 변환
+print( mat2 ) # tf.Tensor([[ 1  0][-1  2]], shape=(2, 2), dtype=int32)
+print( tf.rank( mat2) ) # tf.Tensor(2, shape=(), dtype=int32)
+# 행렬 연산
+print( tf.math.multiply( mat1 , mat2 ) ) # tf.Tensor( [[ 10   0] [-30  80]], shape=(2, 2), dtype=int32)
+print( mat1 * mat2 ) # tf.Tensor( [[ 10   0] [-30  80]], shape=(2, 2), dtype=int32)
+print( mat1 + mat2 ) # .math.add( mat1 , mat2 )
+print( mat1 - mat2 ) # .math.subtract( mat1 , mat2 )
+print( mat1 / mat2 ) # .math.divide ( mat1 , mat2 )
+print( mat1 % mat2 ) # 오류 # (코랩) GPU ~~~ # GPU 계산을 %연산자 지원하지 않는다. # division by zero 조심.
+print( tf.math.mod( mat1 , mat2 ) )
+print( mat1 // mat2 )
+print( tf.math.multiply( mat1 , 3 ) ) # 브로드캐스팅
+print( tf.matmul( mat1 , mat2 ) ) # 행열곱 연산
+'''
+[[-10  40]
+ [-10  80]], shape=(2, 2), dtype=int32)
+'''
+
+'''
+    [ 인공지능(AI) ]
+        - 빅데이터 : 많은 자료들 다루는 기술
+        - 머신러닝 : 자료들의 학습 모델       ( 사이킷런 라이브러리)  
+        - 딥러닝 : 복잡한 자료들의 학습 모델   ( 텐서플로 라이브러리)
+     
+    [텐서플로 자료구조]  
+    스칼라             벡터                          메트릭                  텐서
+    rank-0           rank-1                       rank-2                  rank-3
+    값               리스트                        2차원리스트               3차원리스트 
+    차수-0           차수(축)-1                     차수(축)-2              차수(축)-3   
+    x               한방향:가로 또는 세로            두방향:가로(x)세로(y)    세방향 : 가로(x)세로(y)높이(z)
+    
+'''
+
+
 
 
 
