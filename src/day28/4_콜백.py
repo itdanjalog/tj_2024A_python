@@ -22,7 +22,7 @@ model = tf.keras.Sequential([
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # 체크포인트 설정
-checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='tmp_checkpoint.ckpt',
+checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='tmp_checkpoint.weights.h5',
                                                 save_weights_only=True,
                                                 save_best_only=True,
                                                 monitor='val_loss',
@@ -40,7 +40,7 @@ loss, acc = model.evaluate(x_test, y_test)
 print(f'체크포인트 로드 전: loss: {loss:.4f}, acc: {acc:.4f}')
 
 # 체크포인트 파일을 모델에 로드
-model.load_weights('tmp_checkpoint.ckpt')
+model.load_weights('tmp_checkpoint.weights.h5')
 loss, acc = model.evaluate(x_test, y_test)
 print(f'체크포인트 로드 후: loss: {loss:.4f}, acc: {acc:.4f}')
 
@@ -76,17 +76,17 @@ def scheduler(epoch, lr):
     tf.print(f'learning_rate: {lr:.5f}')
     # 첫 5 에포크 동안 유지
     if epoch < 5:
-        return lr
+        return float(lr)
     else:
     # 학습률 감소 적용
-        return lr * tf.math.exp(-0.1)
+        return float(lr * tf.math.exp(-0.1))
 
 # 콜백 객체생성 및 scheduler 함수 적용
 lr_scheduler = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
 model.compile(tf.keras.optimizers.SGD(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 # 초기 학습률 확인(0.01)
-print(round(model.optimizer.lr.numpy(), 5))
+print(round(model.optimizer.learning_rate.numpy(), 5))
 
 model.fit(x_train, y_train,
           validation_data=(x_test, y_test),
@@ -95,7 +95,7 @@ model.fit(x_train, y_train,
           callbacks=[lr_scheduler]
           )
 # 최종 학습률 스케줄러 확인
-round(model.optimizer.lr.numpy(), 5)
+round(model.optimizer.learning_rate.numpy(), 5)
 
 
 model = tf.keras.Sequential([
