@@ -83,7 +83,12 @@ def plot_loss_acc( history , epoch ) :
 
 plot_loss_acc( history , 10 )
 
-
+# 11. 훈련된 모델로 예측 하기
+print( y_valid[0] )# 종속변수  #  10000개 중에 첫번째 손글씨의 정답 # 숫자
+# 7
+print( tf.argmax( model.predict( x_valid_in )[0] ) ) # 독립변수 # 테스트용으로 예측하기. # 이미지된 손글씨
+# argmax( ) : 배열내 가장 큰 값을 가진 요소의 인덱스 반환
+# tf.Tensor(7, shape=(), dtype=int64)
 
 
 
