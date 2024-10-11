@@ -22,7 +22,7 @@ y_train_odd.shape
 print(y_train[:10])
 print(y_train_odd[:10])
 
-# Validation 데이터셋 처리
+# Validation 데이터셋 처리 # 밸-리-데이-션
 y_valid_odd = []
 for y in y_valid:
     if y % 2==0:
@@ -33,7 +33,7 @@ for y in y_valid:
 y_valid_odd = np.array(y_valid_odd)
 y_valid_odd.shape
 
-# 정규화(Normalization)
+# 정규화(Normalization) # 밸-릿
 x_train = x_train / 255.0
 x_valid = x_valid / 255.0
 
@@ -47,23 +47,47 @@ print(x_train_in.shape, x_valid_in.shape)
 # Functional API를 사용하여 모델 생성
 
 inputs = tf.keras.layers.Input(shape=(28, 28, 1))
+# Input 레이어는 모델의 입력을 정의합니다.
+# 이 모델은 28x28 크기의 흑백 이미지(채널 수 1)를 입력으로 받습니다. (예: MNIST 데이터셋)
 
 conv = tf.keras.layers.Conv2D(32, (3, 3), activation='relu')(inputs)
+# Conv2D는 합성곱 레이어로, 입력 이미지에서 특징을 추출합니다.
+# 32개의 필터를 사용하여 3x3 크기의 커널을 적용하고, ReLU 활성화 함수로 비선형성을 추가합니다.
+# 출력의 형태는 (28-3+1, 28-3+1) = 26x26으로, 각 필터가 26x26 크기의 특성 맵을 생성합니다. (채널은 32)
 pool = tf.keras.layers.MaxPooling2D((2, 2))(conv)
+# MaxPooling2D는 다운샘플링 레이어로, 특성 맵의 크기를 줄여 계산량을 줄이고 중요한 특징을 강조합니다.
+# 여기서는 2x2 풀링 윈도우를 사용하여 출력 크기를 절반으로 줄입니다.
+# 출력 형태는 **(13, 13, 32)**가 됩니다.
 flat = tf.keras.layers.Flatten()(pool)
+# Flatten은 다차원 배열인 특성 맵을 1차원 벡터로 변환합니다.
+# (13, 13, 32) 크기의 특성 맵을 1차원 벡터 (13 * 13 * 32 = 5408)로 변환합니다.
 
 flat_inputs = tf.keras.layers.Flatten()(inputs)
+# 원본 28x28 이미지를 직접 평평하게 만들어 1차원 벡터로 변환합니다.
+# 출력 벡터의 크기는 28 * 28 = 784입니다.
 concat = tf.keras.layers.Concatenate()([flat, flat_inputs])
+# Concatenate는 두 개의 1차원 벡터를 결합합니다.
+# 합성곱된 특성 맵과 원본 이미지에서 직접 추출된 특성 벡터를 결합합니다.
+# 결합된 출력의 크기는 5408 + 784 = 6192입니다.
 outputs = tf.keras.layers.Dense(10, activation='softmax')(concat)
+# Dense는 완전 연결층으로, 10개의 노드를 가지고 있습니다. 각 노드는 10개의 클래스 중 하나에 해당하며, 이는 분류 작업을 수행합니다.
+# Softmax 활성화 함수를 사용하여 출력이 각 클래스에 대한 확률이 되도록 합니다.
 
 model = tf.keras.models.Model(inputs=inputs, outputs=outputs)
-
+# 입력과 출력을 정의하여 모델을 생성합니다.
+# model.summary()는 모델의 구조를 출력하여 각 레이어의 출력 형태와 파라미터 수를 보여줍니다.
 model.summary()
+# 입력과 출력을 정의하여 모델을 생성합니다.
+# model.summary()는 모델의 구조를 출력하여 각 레이어의 출력 형태와 파라미터 수를 보여줍니다.
+
+# 이 모델은 28x28 크기의 흑백 이미지를 입력으로 받아, 합성곱 신경망을 통해 추출한 특성 맵과 원본 이미지의 정보를 결합하여 10개의 클래스로 분류하는 모델입니다.
+
 
 # 모델 구조 출력 및 이미지 파일로 저장
 # # 모델 구조 출력 및 이미지 파일로 저장
-# from tensorflow.python.keras.utils.vis_utils import plot_model
+# from tensorflow.keras.utils import plot_model
 # plot_model(model, show_shapes=True, show_layer_names=True, to_file='functional_cnn.png')
+
 
 
 # 모델 컴파일
