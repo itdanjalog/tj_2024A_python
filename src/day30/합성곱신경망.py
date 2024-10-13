@@ -17,7 +17,7 @@ for y in y_train:
         y_train_odd.append(1)
 
 y_train_odd = np.array(y_train_odd)
-y_train_odd.shape
+print( y_train_odd.shape )
 
 print(y_train[:10])
 print(y_train_odd[:10])
@@ -31,7 +31,7 @@ for y in y_valid:
         y_valid_odd.append(1)
 
 y_valid_odd = np.array(y_valid_odd)
-y_valid_odd.shape
+print( y_valid_odd.shape )
 
 # 정규화(Normalization) # 밸-릿
 x_train = x_train / 255.0
@@ -85,9 +85,11 @@ model.summary()
 
 # 모델 구조 출력 및 이미지 파일로 저장
 # # 모델 구조 출력 및 이미지 파일로 저장
-# from tensorflow.keras.utils import plot_model
+# from tensorflow.keras.utils import plot_model # graphviz
 # plot_model(model, show_shapes=True, show_layer_names=True, to_file='functional_cnn.png')
 
+# pip install pydot --upgrade
+# pip install graphviz --upgrade
 
 
 # 모델 컴파일
@@ -140,7 +142,7 @@ history = model.fit({'inputs': x_train_in}, {'digit_dense': y_train, 'odd_dense'
                     validation_data=({'inputs': x_valid_in},  {'digit_dense': y_valid, 'odd_dense': y_valid_odd}),
                     epochs=10)
 
-# 모델 성능
+# 모델 성능 # 이밸류에이트
 model.evaluate({'inputs': x_valid_in}, {'digit_dense': y_valid, 'odd_dense': y_valid_odd})
 
 # 샘플 이미지 출력
@@ -171,6 +173,7 @@ base_model_output = model.get_layer('flatten_layer').output
 # 앞의 출력을 출력으로 하는 모델 정의
 base_model = tf.keras.models.Model(inputs=model.input, outputs=base_model_output, name='base')
 base_model.summary()
+
 
 # plot_model(base_model, show_shapes=True, show_layer_names=True, to_file='base_model.png')
 
