@@ -9,6 +9,9 @@ import tensorflow as tf
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 (x_train , y_train ) , ( x_valid , y_valid) = fashion_mnist.load_data()
-
 # 과제 : Functional Api 이용한 모델 생성( 다중 입력 ) 과 예측 테스트
-# 모델을 생성 하고 훈련한 이후 인터넷 에서의 임의의 가방 사진 으로 예측 하여 예측 결과가 8이 나오도록 하시오.
+# OpenCV 를 이용하여 인터넷에서 임의의 패션 이미지를 예측 하여 해당 이미지와 결과가 동일하게 나올수 있도록 하시오.
+# 주의할점 :
+# 1. 이미지파일명은 영문
+# 2. 현재 모델이 흑백 이므로 1채널 변환 , img = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY)
+# 3. 지난 수업 코드 참고해서 구현
