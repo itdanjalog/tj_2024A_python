@@ -94,6 +94,47 @@ print( loss , acc )
 
 # 다중 출력 분류 모델 ( 1. 다중분류[0~9] 2.이진분류[0,1] )
 
+# 1. 모델 생성 # name속성은 모델객체내 레이어 호출시 사용한다.(레이어식별용)
+    # (1) 입력 1
+inputs = tf.keras.layers.Input( shape = (28,28,1) , name='inputs')
+conv = tf.keras.layers.Conv2D( 32 , (3,3) , activation='relu' , name='conv2d_layer' )(inputs)
+pool = tf.keras.layers.MaxPooling2D( (2,2) , name='maxpool_layer')(conv)
+flat = tf.keras.layers.Flatten( name='flatten_layer')(pool)
+    # (2) 입력 2
+flat_inputs = tf.keras.layers.Flatten()(inputs)
+    # (3) 합치기
+concat = tf.keras.layers.Concatenate()( [flat , flat_inputs] )
+    # (4) 출력 레이어 2개
+digit_outputs = tf.keras.layers.Dense( 10 , activation='softmax' , name='digit_dense')(concat)
+odd_outputs = tf.keras.layers.Dense( 1 , activation='sigmoid' , name='odd_dense')(flat_inputs)
+    # (5) 모델 생성
+model = tf.keras.models.Model( inputs = inputs , outputs = [ digit_outputs , odd_outputs ] )
+# 확인
+print( model.summary() )
+print( model.input )
+print( model.output )
+
+# 2. 모델 컴파일 # 다중 출력의 손실함수는 loss = { }
+model.compile( optimizer = 'adam' ,
+               loss = { 'digit_dense' : 'sparse_categorical_crossentropy' ,  'odd_dense' : 'binary_crossentropy' },
+                loss_weights = { 'digit_dense' : 1 , 'odd_dense' : 0.5 } ,  # 손실함수 가중치 # 1 :100% , 0.5 : 50%
+               # 0~9 예측/결과 는 100% 반영하고 홀짝예측/결과 는 50% 반영 설정 # 모델 손실계산에 사용할 비중(가중치)
+                metrics = ['acuracy'] )
+# 3. 모델 훈련 # 다중 출력시 훈련용과 검증용이 다중이 되므로 { '출력레이어name' : 출력레이어변수 } 딕셔너리 구조 사용.
+history = model.fit( { 'inputs' : x_train_in } , {'digit_dense' : y_train , 'odd_dense' : y_train_odd } , # 훈련용
+                     validation_data = ( { 'inputs' : x_valid } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  ) ,
+                     epochs = 10 )
+# 4. 모델 성능 평가
+model.evaluate(  { 'inputs' : x_valid_in } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  )
+
+
+
+
+
+
+
+
+
 
 
 
