@@ -1,4 +1,4 @@
-#day31 --> 1_합성곱신명망.py # p.163
+#day31 --> 1_합성곱신경망.py # p.163
 '''
 - 딥러닝 프로세스(절차)
   1. 데이터 수집
@@ -132,14 +132,11 @@ history = model.fit( { 'inputs' : x_train_in } , {'digit_dense' : y_train , 'odd
 # 4. 모델 성능 평가
 model.evaluate(  { 'inputs' : x_valid_in } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  )
 
-
-
-
-
-
-
-
-
+# 5. 모델 예측
+print( y_valid[ 0 ] ) # 정답 : 7
+digit_preds , odd_preds = model.predict( x_valid_in ) # 예측
+print( digit_preds[0] )
+print( odd_preds[0] )
 
 
 
