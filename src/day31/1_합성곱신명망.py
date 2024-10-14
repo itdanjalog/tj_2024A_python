@@ -54,6 +54,45 @@ x_train_in = tf.expand_dims( x_train , -1 )
 x_valid_in = tf.expand_dims( x_valid , -1 )
 print( x_train_in.shape , x_valid_in.shape ) #  (60000, 28, 28, 1) (10000, 28, 28, 1)
 
+# 5. 모델 생성
+################ 합성곱 입력 구조 #####################
+# (1) 입력 레이어  # 객체
+inputs = tf.keras.layers.Input( shape = (28 , 28 , 1) )
+# (2) 합성곱 레이어
+conv = tf.keras.layers.Conv2D( 32 , (3 , 3) , activation = 'relu')
+conv = conv( inputs ) # 합성곱 레이어 앞에 입력레이어 연결 하기 # __call__ # 입력레이어 <-- 합성곱 레이어
+# (3) 풀링 레이어
+pool = tf.keras.layers.MaxPooling2D( (2,2) )
+pool = pool( conv ) # 풀링 레이어 앞에 합성곱레이어 연결 하기 # __call__ # 입력레이어 <-- 합성곱 레이어 <-- 풀링 레이어
+# (4) 플래톤 레이어
+flat = tf.keras.layers.Flatten()
+flat = flat( pool ) # 플래톤 레이어 앞에 풀링 레이어 연결 하기  # __call__ # 입력레이어 <-- 합성곱 레이어 <-- 풀링 레이어 <-- 플래톤 레이어
+################ 단순 입력 구조 추가 #####################
+flat_inputs = tf.keras.layers.Flatten()  # 입력레이어 <-- 플래톤 레이어
+flat_inputs = flat_inputs( inputs )
+################ 2개 입력 구조를 1개 출력으로 만들기 # 합치기  #####################
+concat = tf.keras.layers.Concatenate()
+concat = concat( [ flat , flat_inputs ] ) # 2개 입력 구조를 합치기
+# 입력레이어 --> 합성곱 레이어 --> 풀링 레이어 --> 플래톤 레이어
+#                                                          -----> Concatenate()입력레이어합치기 -----> Dense()출력 레이어
+# 입력레이어 -------------------------------> 플래톤 레이어
+# (5) 출력 레이어
+outputs = tf.keras.layers.Dense( 10 , activation='softmax' )
+outputs = outputs( concat )
+# (6) 모델
+model = tf.keras.models.Model( inputs = inputs , outputs = outputs)
+
+# 6. 모델 컴파일
+model.compile( optimizer = 'adam' , loss='sparse_categorical_crossentropy' , metrics=['accuracy'])
+# 7. 모델 훈련
+history =  model.fit( x_train_in , y_train ,
+                      validation_data = ( x_valid_in , y_valid ) ,
+                      epochs = 10 )
+# 8. 모델 성능
+loss , acc = model.evaluate( x_valid_in , y_valid )
+print( loss , acc )
+
+# 다중 출력 분류 모델 ( 1. 다중분류[0~9] 2.이진분류[0,1] )
 
 
 
