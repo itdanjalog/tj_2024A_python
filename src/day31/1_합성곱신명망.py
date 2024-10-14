@@ -40,12 +40,13 @@ for y in y_train :
 y_train_odd = np.array( y_train_odd ) # 넘파이 배열
 
 y_valid_odd = [ ]
-for y in y_train :
+for y in y_valid :
     if y % 2 == 0 :
         y_valid_odd.append( 0 )
     else:
         y_valid_odd.append( 1 )
 y_valid_odd = np.array( y_valid_odd ) # 넘파이 배열
+
 # 3. 정규화
 x_train = x_train / 255.0
 x_valid = x_valid / 255.0
@@ -110,19 +111,23 @@ odd_outputs = tf.keras.layers.Dense( 1 , activation='sigmoid' , name='odd_dense'
     # (5) 모델 생성
 model = tf.keras.models.Model( inputs = inputs , outputs = [ digit_outputs , odd_outputs ] )
 # 확인
-print( model.summary() )
+
 print( model.input )
 print( model.output )
+
 
 # 2. 모델 컴파일 # 다중 출력의 손실함수는 loss = { }
 model.compile( optimizer = 'adam' ,
                loss = { 'digit_dense' : 'sparse_categorical_crossentropy' ,  'odd_dense' : 'binary_crossentropy' },
                 loss_weights = { 'digit_dense' : 1 , 'odd_dense' : 0.5 } ,  # 손실함수 가중치 # 1 :100% , 0.5 : 50%
                # 0~9 예측/결과 는 100% 반영하고 홀짝예측/결과 는 50% 반영 설정 # 모델 손실계산에 사용할 비중(가중치)
-                metrics = ['acuracy'] )
+                metrics = [ 'accuracy', 'accuracy'  ] ) # 다중 출력에 따른 평가지표를 다중 설정
+
+print( model.summary() )
+
 # 3. 모델 훈련 # 다중 출력시 훈련용과 검증용이 다중이 되므로 { '출력레이어name' : 출력레이어변수 } 딕셔너리 구조 사용.
 history = model.fit( { 'inputs' : x_train_in } , {'digit_dense' : y_train , 'odd_dense' : y_train_odd } , # 훈련용
-                     validation_data = ( { 'inputs' : x_valid } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  ) ,
+                     validation_data = ( { 'inputs' : x_valid_in } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  ) ,
                      epochs = 10 )
 # 4. 모델 성능 평가
 model.evaluate(  { 'inputs' : x_valid_in } , {'digit_dense' : y_valid , 'odd_dense' : y_valid_odd }  )
