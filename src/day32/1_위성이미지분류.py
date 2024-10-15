@@ -52,7 +52,7 @@ valid_data = valid_ds.map(preprocess_data , num_parallel_calls = tf.data.AUTOTUN
 # 훈련용데이터를 셔플링(가중치-업데이트o) 하고 캐시(기록) 제외한  오토튠을 적용했다.
 # 검증용데이터를 셔플링(가중치-업데이트x) 하지 않고 캐시(기록) 하고  오토튠을 적용했다.
 train_data = train_data.shuffle( BUFFER_SIZE ).batch( BATCH_SIZE ).prefetch( tf.data.AUTOTUNE )
-valid_data = valid_data.batch( BATCH_SIZE ).cache().prefech( tf.data.AUTOTUNE )
+valid_data = valid_data.batch( BATCH_SIZE ).cache().prefetch( tf.data.AUTOTUNE )
 # cache() : 캐시( 기록 )란 검증데이터셋 메모리를 캐시한다.
 # 한번 호출한 검증데이터는 메모리에 기록하여 다음에 호출시 빠르게 접근할수 있도록 하는 함수
 
