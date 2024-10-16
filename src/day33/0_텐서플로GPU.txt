@@ -4,7 +4,7 @@
     - 사용방법
         방법1: 좋은 그래픽와 대량은 그래픽을 사용 ( 교육·강의 한정적 이다. )
         방법2: 코랩 사용 ( 구글 가상 메모리 사용 ) - https://colab.research.google.com
-            - 현재 강의는 코랩 대신 파이참을 사용하고 있다.
+            - 현재 강의는 코랩 대신 파이참을 사용하고 있다. ( 모델서버[flask] 구축 해야 하므로 )
 
 텐서플로 GPU 설치
     - 공식페이지 : https://www.tensorflow.org/install/source_windows?hl=ko#gpu
@@ -50,25 +50,11 @@
         1. tensorflow.python.framework.errors_impl.InternalError: Graph execution error:
             Detected at node 'sequential/dense/MatMul' defined at (most recent call last):
             원인 : 텐서플로가 GPU 사용 할수 없을때
-            >> 해결방안 1. (  32.0.15.5599 ) 이상 - 그래픽카드 드라이버 업데이트/재설치
+            >> 해결방안 : 그래픽카드 드라이버 업데이트/재설치 (  32.0.15.5599  이상 및 최신버전 )
 
         2. tensorflow-dataset 'utf-8' codec can't decode byte 0xc1 in position 254: invalid start byte
             원인 : 경로상의 한글이 포함 될수 있을때 오류 발생
-            >> 해결방안 "dataset/"  -->   "c:/dataset/"
+            >> 해결방안 : "dataset/"  -->   "c:/dataset/"
 
         3. tensorflow_datasets 관련 오류는 모듈 재설치
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
