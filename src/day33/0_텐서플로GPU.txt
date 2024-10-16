@@ -40,11 +40,31 @@
 
     6. tensorflow_gpu 설치
         1. 파이참 상단메뉴 -> 파일 -> 설정
-        2. [프로젝트] -> [python인터프리터] -> [설치] -> tensorflow-gpu 검색후 ( 2.10 버전으로 ) 설치
+        2. [프로젝트] -> [python인터프리터] -> [설치] -> tensorflow-gpu 검색후 ( 버전 지정 : 2.10 버전 ) 설치
 
-    7. 테스트
+    7. 테스트 ( 컴퓨터 리부팅 후 진행 )
         import tensorflow as tf
         print( f'gpu : { tf.test.gpu_device_name() }') # GPU : /device:GPU:0
+
+    * 다양한 문제가 발생 할 수 있다.
+        1. tensorflow.python.framework.errors_impl.InternalError: Graph execution error:
+            Detected at node 'sequential/dense/MatMul' defined at (most recent call last):
+            원인 : 텐서플로가 GPU 사용 할수 없을때
+            >> 해결방안 1. (  32.0.15.5599 ) 이상 - 그래픽카드 드라이버 업데이트/재설치
+
+        2. tensorflow-dataset 'utf-8' codec can't decode byte 0xc1 in position 254: invalid start byte
+            원인 : 경로상의 한글이 포함 될수 있을때 오류 발생
+            >> 해결방안 "dataset/"  -->   "c:/dataset/"
+
+        3. tensorflow_datasets 관련 오류는 모듈 재설치
+
+
+
+
+
+
+
+
 
 
 
