@@ -1,0 +1,53 @@
+# 코랩 이용한 실습  교재.p3
+# [코랩] : 구글에서 지원하는 가상의 컴퓨터(노트북) # cpu , gpu 지원
+# 사용처 : 연구 , 학습용
+# 1. https://colab.research.google.com/?hl=ko
+# 2. [새노트] # 구글 드라이브 파일 형식으로 저장 # 구글 로그인
+# 3. 상단 노트 이름을 'YOLO실습' 으로 수정
+# 4. 상단 메뉴에 [런타임] -> [ 런타임 유형 변경 ] -> py3 , gpu
+# * 파이참과 주의할점 : print 생략 가능
+# 예] 1+1  입력후 실행(ctrl+enter)
+# * 코드 단위 나누기 ( 코드추가 , ctrl+m b )
+
+# ( 코랩에서 작성한 코드 )
+# [1] 코랩에서 GIThub 클론하기 # YOLO 저장소 클론
+# content(기본상위) 폴더 , 왼쪽 사이드바 [파일] 클릭 -> darknet 폴더 생성 여부 확인
+!git clone https://github.com/AlexeyAB/darknet
+
+# [2] darknet 폴더로 경로 이동 # 기본값은 content폴더 위치함 # %cd 폴더명
+%cd darknet
+
+# [3] Darknet 빌드(컴파일)한다. # 모델이 GPU 사용할수 있도록 Makfile을 수정한다.
+!sed -i 's/GPU=0/GPU=1/' Makefile     # 모델이 GPU 사용 설정
+!sed -i 's/CUDNN=0/CUDNN=1/' Makefile # 모델이 CUDNN 사용 설정
+!sed -i 's/CUDNN_HALF=0/CUDNN_HALF=1/' Makefile # HALF : FP16 속성을 사용하여 메모리 사용량을 줄이고 속도 향상 설정
+!make # 빌드(컴파일)
+
+# [4] YOLO 모델의 가중치(학습률 데이터) 를 가져오기 # !wget 가중치링크 # darknet폴더 저장된다.
+!wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights
+
+# [5] YOLO 모델 예측 # 예측할 이미지 파일 # content(최상위폴더)/gangnam.jpg
+#!./darknet detector test cfg/coco.data cfg/[YOLO버전].cfg [YOLO버전].weights 예측할이미지경로및파일명
+!./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights /content/gangnam.jpg
+
+# [6] 예측 결과 이미지를 시각화 하기
+import tensorflow as tf
+import matplotlib.pyplot as plt
+img = tf.io.read_file('/content/darknet/predictions.jpg') # 예측결과 인 이미지 경로 에서 파일객체로 가져오기
+img = tf.image.decode_jpeg( img , channels = 3 ) # 3채널(칼라) 이미지 로 디코딩 하기
+img = tf.image.convert_image_dtype( img , tf.float32) # 텐서 데이터로 변환
+plt.imshow( img ) # 이미지 차트 대입
+plt.show()
+
+# [실습1] 임의의 특정 이미지 URL를 이용한 객체탐지하기
+# 1. 가져올 이미지의 URL 경로 정의 # 인터넷 이미지 아무거나 URL 사용하기
+img_path = 'https://search.pstatic.net/sunny/?src=https%3A%2F%2Fwww.dogdrip.net%2Fdvs%2Fd%2F21%2F10%2F23%2F5231a40d3ca5a6643be4c0f1d1d740d2.jpg&type=sc960_832'
+# 2. 텐서의 지정한 URL를 파일객체로 가져오기
+img = tf.keras.utils.get_file( fname = 'result3.jpg' , origin = img_path ) # 이미지 변경시 fname은 변경 (*캐시기록남음)
+# 3. 가중치를 이용한 예측하기
+# !./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights 예측할이미지경로및파일명
+# !./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights {변수명}
+!./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights {img}
+
+
+

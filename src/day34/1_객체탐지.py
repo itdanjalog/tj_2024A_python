@@ -29,6 +29,47 @@ print( obj_detector )
 result = obj_detector( img_input )
 print( result.keys() ) # 경계박스 좌표 , 예측한/검출된 클래스(정답/종속) 아이디 , 예측/검출된 확률/스코어
 print( len( result['detection_scores'] )  )
+# 3. 모델이 예측한 결과를 시각화
+boxes = result['detection_boxes'] # 좌표 예측값
+labels = result['detection_class_entities'] # 클래스(정답/종속) 아이디
+scores = result['detection_scores'] #  예측/검출된 확률/스코어
+print( boxes );  print( labels ); print( scores );
+# 샘플 이미지 가로 세로 크기
+img_height = img.shape[0] # 가로
+img_width = img.shape[1] # 세로
+obj_to_detect = 10 # 탐지할 최대 객체수
+print(min( obj_to_detect , boxes.shape[0] )  )
+for i in range( min( obj_to_detect , boxes.shape[0] ) ) :
+    if scores[i] >= 0.2 : # 예측 신뢰도 가 0.2( 20%) 이상이면
+        ymax = boxes[i][0] * img_height    # 사각 박스의 위치 좌표 : 상단 끝
+        xmin = boxes[i][1] * img_width    # 사각 박스의 위치 좌표 : 왼쪽 끝
+        ymin = boxes[i][2] * img_height    # 사각 박스의 위치 좌표 : 하단 끝
+        xmax = boxes[i][3] * img_width    # 사각 박스의 위치 좌표 : 오른쪽 끝
+        plt.imshow( img ) # 차트에 이미지 넣기
+        # 예측한 경계 상자를 그리기
+        plt.plot( [xmin , xmax , xmax , xmin , xmin ] , [ ymin , ymin , ymax , ymax , ymin] , color = 'yellow' , linewidth = 2 )
+        # 네 점의 좌표 찍기 : ( xmin , ymin ) 왼쪽하단꼭지점, (xmax,ymin)오른쪽하단꼭지점 , (xmax,ymax)오른쪽상단꼭지점 ~~ 연결 경계선를 노란색
+        # 4개의 좌표를 그리고 마지막으로 첫번째 좌표를 한번더 명시하여 마침을 한다. ( 다섯번째 점이 첫번째 점과 같아야 도형 닫기가 가능하다. )
+        class_name = labels[i].numpy().decode('utf-8') # 예측 레이블 utf-8 인코딩
+        infer_score = int( scores[i].numpy() * 100 ) # 신뢰도 백분율
+        annotation = f'{class_name}:{infer_score}%'
+        plt.text( xmin+10 , ymax+20 , annotation , color = 'white' , backgroundcolor='blue' , fontsize = 10 ) # 왼쪽 상단
+plt.show() # 차트 열기
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
