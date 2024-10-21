@@ -29,13 +29,13 @@ print( tokenizer.word_index ) # .word_index 사전 목록 출력
 print( tokenizer.texts_to_sequences( sentences ) )      # 인코딩1       # [[2, 5, 3, 3, 4], [2, 6, 4]]
 print( tokenizer.texts_to_sequences( new_sentences ) )  # 인코딩2      # [[2, 1, 5, 4]]
 
-# 단어 사전의 최대 개수 설정 # 최대 개수 외 단어들은 <OOV> 표현된다. # num_words =
-tokenizer = Tokenizer( oov_token="<OOV>" , num_words = 3 ) # 사전목록의 단어수는 최대 3개이며 , 나머지는 <OOV> 표현
+# 단어 사전의 최대 개수 설정 # 최대 개수 외 단어들은 <OOV> 표현된다. # num_words = (N-1)개
+tokenizer = Tokenizer( oov_token="<OOV>" , num_words = 3 ) # 사전목록의 단어수는 최대 2(N-1) 개이며 , 나머지는 <OOV> 표현
 tokenizer.fit_on_texts( sentences ) #
 print("----------")
 print( tokenizer.word_index )                           # {'<OOV>': 1, '영실이는': 2, '정말': 3, '좋아해': 4, '나를': 5, '영화를': 6}
 print( tokenizer.texts_to_sequences( sentences ) )      # 인코딩1      # [[2, 1, 1, 1, 1], [2, 1, 1]]
-print( tokenizer.texts_to_sequences( new_sentences ) )  # 인코딩2     # [[2, 1, 1, 1]] # 2:영실이는 1:경록이와 1:나를 1:좋아해
+print( tokenizer.texts_to_sequences( new_sentences ) )  # 인코딩2      # [[2, 1, 1, 1]] # 2:영실이는 1:경록이와 1:나를 1:좋아해
 print("----------")
 
 # 문장 길이 맞추기 # 패딩 # pad_sequences( 인코딩단어들 ) : 문장의 길이를 맞춘다. 앞쪽에 0으로 채운다
@@ -49,33 +49,3 @@ print( pad_sequences( word_encoding , padding='post')) # [[2 1 1 1 1] [2 1 1 0 0
 print( pad_sequences( word_encoding , padding='post' , maxlen=4 ) ) # [[1 1 1 1] [2 1 1 0]]
     #  maxlen=4 문장 길이 최대값 설정 # truncating='post' 뒤쪽에서 잘린다. 생략시 앞쪽에 잘린다.
 print( pad_sequences( word_encoding , padding='post' , maxlen=4 , truncating='post')) # [[2 1 1 1] [2 1 1 0]]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
