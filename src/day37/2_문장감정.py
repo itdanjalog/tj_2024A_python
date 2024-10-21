@@ -16,7 +16,7 @@ df = pd.read_csv(file, sep='\t')
 df[1000:1007]
 
 # 형태소 분석기
-!pip install konlpy
+# !pip install konlpy
 from konlpy.tag import Okt
 okt = Okt()
 
@@ -97,7 +97,7 @@ model = Sequential([
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
-history = model.fit(X, y, epochs=20, verbose=1)
+history = model.fit(X, y, epochs=5, verbose=1) # 20
 
 # 문장생성함수 (시작 텍스트, 생성 단어 개수)
 def text_generation(sos, count):

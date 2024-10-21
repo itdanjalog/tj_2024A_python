@@ -1,7 +1,7 @@
 # 필요 라이브러리 불러오기
 import pandas as pd
 import numpy as np
-import seaborn as sns
+import seaborn as sns # seaborn 설치
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
@@ -15,21 +15,40 @@ train_file = tf.keras.utils.get_file(
 train = pd.read_csv(train_file, sep='\t')
 
 # 데이터 크기 및 샘플 확인
-print("train shape: ", train.shape)
-train.head()
+print("train shape: ", train.shape) # (150000, 3)
+print( train.head() )
+#          id                                           document  label
+# 0   9976970                                아 더빙.. 진짜 짜증나네요 목소리      0
+# 1   3819312                  흠...포스터보고 초딩영화줄....오버연기조차 가볍지 않구나      1
+# 2  10265843                                  너무재밓었다그래서보는것을추천한다      0
+# 3   9045019                      교도소 이야기구먼 ..솔직히 재미는 없다..평점 조정      0
+# 4   6483659  사이몬페그의 익살스런 연기가 돋보였던 영화!스파이더맨에서 늙어보이기만 했던 커스틴 ...      1
 
 # 레이블별 개수
 cnt = train['label'].value_counts()
 print(cnt)
+#      label
+# 0    75173
+# 1    74827
 
 # 레이블별 비율
 sns.countplot(x='label',data=train)
 
 # 결측치 확인
-train.isnull().sum()
+print( train.isnull().sum() )
+# id          0
+# document    5
+# label       0
+# dtype: int64
 
 # 결측치(의견없음)가 특정 label값만 있는지 확인
-train[train['document'].isnull()]
+print( train[train['document'].isnull()] )
+#              id document  label
+# 25857   2172111      NaN      1
+# 55737   6369843      NaN      1
+# 110014  1034280      NaN      0
+# 126782  5942978      NaN      0
+# 140721  1034283      NaN      0
 
 # 레이블 별 텍스트 길이
 fig,(ax1,ax2)=plt.subplots(1,2,figsize=(10,5))
@@ -43,7 +62,7 @@ ax2.set_title('negative')
 fig.suptitle('Number of characters')
 plt.show()
 
-
+'''
 # Mecab 형태소 설치
 ! git clone https://github.com/SOMJANG/Mecab-ko-for-Google-Colab.git
 
@@ -53,15 +72,16 @@ plt.show()
 
         ! bash
         install_mecab - ko_on_colab190912.sh
-
+'''
 # Kkma, Komoran, Okt, Mecab 형태소
-import konlpy
-from konlpy.tag import Kkma, Komoran, Okt, Mecab
+import konlpy # konlpy 설치
+from konlpy.tag import Kkma, Komoran, Okt , Mecab
 
+'''
 kkma = Kkma()
 komoran = Komoran()
 okt = Okt()
-mecab = Mecab()
+mecab = Mecab() # 오류
 
 # 형태소별 샘플
 text = "영실아안녕오늘날씨어때?"
@@ -232,14 +252,14 @@ model2.evaluate(test_data, test_label)
 model2.load_weights(checkpoint_path)
 model2.evaluate(test_data, test_label)
 
-!git clone https://github.com/SKTBrain/KoBERT.git
+# !git clone https://github.com/SKTBrain/KoBERT.git
+#
+# cd KoBERT
+#
+# pip install -r requirements.txt
 
-cd KoBERT
 
-pip install -r requirements.txt
-
-
-from gluonnlp.data import SentencepieceTokenizer
+from gluonnlp.data import SentencepieceTokenizer # gluonnlp
 from kobert.utils import get_tokenizer
 tok_path = get_tokenizer()
 sp  = SentencepieceTokenizer(tok_path)
@@ -277,3 +297,4 @@ history3 = model3.fit(train_padded, train_labels,
 plot_graphs(history3, 'accuracy')
 
 plot_graphs(history3, 'loss')
+'''
