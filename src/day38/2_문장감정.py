@@ -119,10 +119,11 @@ def text_generation(sos, count):
 data = [[0.1, 0.2, 0.7], [0.3, 0.5, 0.2], [0.4, 0.3, 0.3]]
 np.argmax([data], axis=-1)
 
-text_generation("연애 하면서", 12)
+print( text_generation("연애 하면서", 12) )
 
-text_generation("꿀잼", 12)
+print( text_generation("꿀잼", 12) )
 
-text_generation("최고의 영화", 12)
 
-text_generation("손발 이", 12)
+print( text_generation("최고의 영화", 12) )
+
+print( text_generation("손발 이", 12) )

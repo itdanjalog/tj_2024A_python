@@ -76,7 +76,6 @@ plt.show()
 import konlpy # konlpy 설치
 from konlpy.tag import Kkma, Komoran, Okt # , Mecab
 
-
 kkma = Kkma()
 komoran = Komoran()
 okt = Okt()
@@ -113,22 +112,22 @@ print( train.shape )
 # def word_tokenization(text):
 #   stop_words = ["는", "을", "를", '이', '가', '의', '던', '고', '하', '다', '은', '에', '들', '지', '게', '도'] # 한글 불용어
 #   return [word for word in mecab.morphs(text) if word not in stop_words]
-def word_tokenization(text):
-    stop_words = ["는", "을", "를", '이', '가', '의', '던', '고', '하', '다', '은', '에', '들', '지', '게', '도']  # 한글 불용어
-    komoran = Komoran()  # Komoran 형태소 분석기 초기화
-    print("----------------------------")
-    return [word for word in komoran.morphs(text) if word not in stop_words]
-
-data = train['document'].apply((lambda x: word_tokenization(x)))
-data.head()
+# def word_tokenization(text):
+#     # stop_words = ["는", "을", "를", '이', '가', '의', '던', '고', '하', '다', '은', '에', '들', '지', '게', '도']  # 한글 불용어
+#     komoran = Komoran()  # Komoran 형태소 분석기 초기화
+#     print("----------------------------")
+#     return [word for word in komoran.morphs(text) ]
+#
+# data = train['document'].apply( (lambda x: word_tokenization(x)))
+# data.head()
 
 # train과 validation 분할
 
 training_size = 120000
 
 # train 분할
-train_sentences = data[:training_size]
-valid_sentences = data[training_size:]
+train_sentences = train['document'][:training_size]
+valid_sentences = train['document'][training_size:]
 
 # label 분할
 train_labels = train['label'][:training_size]
