@@ -30,6 +30,7 @@ print( tokenizer.texts_to_sequences( sentences ) )      # 인코딩1       # [[2
 print( tokenizer.texts_to_sequences( new_sentences ) )  # 인코딩2      # [[2, 1, 5, 4]]
 
 # 단어 사전의 최대 개수 설정 # 최대 개수 외 단어들은 <OOV> 표현된다. # num_words = (N-1)개
+# 0은 어떤 단어에도 배정되지 않는 예비 인덱스 값이기 때문에, 입력된 말뭉치 가운데 실제로 보존되는 단어의 개수는 num_words-1개가 됩니다.
 tokenizer = Tokenizer( oov_token="<OOV>" , num_words = 3 ) # 사전목록의 단어수는 최대 2(N-1) 개이며 , 나머지는 <OOV> 표현
 tokenizer.fit_on_texts( sentences ) #
 print("----------")
