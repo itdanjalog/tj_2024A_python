@@ -93,10 +93,12 @@ print( data.head() )
 
 # 11. 훈련용 과 테스트용 분할 # tip: 1. fit( split= ) 2. train_test_split( )
 training_size = 120000
-train_sentences = data[ : training_size ] # 0 ~ 119999
-valid_sentences = data[  training_size : ] # 119999 ~
-train_labels = train['label'][ : training_size ]
-train_labels = train['label'][  training_size :]
+# train 분할
+train_sentences = data[:training_size]
+valid_sentences = data[training_size:]
+# label 분할
+train_labels = train['label'][:training_size]
+valid_labels = train['label'][training_size:]
 
 # 12. 단어 사전 만들기 # .fit_on_texts( ) :문자와 숫자(인덱스)를 매칭한다 # 문자를 숫자로 변환한다.
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -136,8 +138,49 @@ train_padded = pad_sequences( train_sequences , truncating = 'post' , padding= p
 valid_padded = pad_sequences( valid_sequences , truncating = trunc_type , padding= padding_type , maxlen= max_length )
 import numpy as np
 train_labels = np.asarray( train_labels ) # 배열로 변환
-valid_labels = np.asarray( train_labels ) # 배열로 변환
+valid_labels = np.asarray( valid_labels ) # 배열로 변환
 print( f'샘플 : { train_padded[ : 1 ] }')
+
+# 17. 모델
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense , LSTM , Embedding , Bidirectional
+
+model = Sequential()
+model.add( Embedding( vocab_size , 32 ) )
+model.add( Bidirectional( LSTM( 32 , return_sequences=False )  ) ) # Bidirectional양방향 이면 유닛(뉴런) *2
+model.add( Dense( 32 , activation='relu') )
+model.add( Dense( 1 , activation='sigmoid') ) # 이진분류 에서 자주 사용하는 활성화함수 # 출력레이어
+
+model.compile( loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'] )
+print( model.summary() )
+
+# 18. 학습
+# 오류 : ValueError: `logits` and `labels` must have the same shape, received ((64, 40, 1) vs (64,)),
+history = model.fit( train_padded , train_labels , # 훈련용
+                     validation_data=(valid_padded,valid_labels), # 학습중 사용할 테스트용
+                     batch_size=64 , # 모델이 한번에 처리할 데이터 수
+                     epochs=10 , # 에포크
+                     verbose=2 # 학습시 콘솔에 요약 정도 속성 , # 0:출력없음 1:진행률바 2:결과요약만
+                     )
+print( history ) # 최종 정확도 , 손실함수 확인
+# 19. 아래 새로운 리뷰 텍스트의 감정 분석 하기 # 예측하기
+new_reviews = [ '영화 정말 재미있다' , '정말 지루하다' , '그냥 보통 이었어요.' , '생각보다 재미가 없다' ]
+# 새로운 리뷰도 전처리
+new_sequences = totkenizer.texts_to_sequences( data ) # .texts_to_sequences() 토크나이저 있는 사전 기반으로 문자를 숫자(벡터) 변환
+new_padded_sequences = pad_sequences( new_sequences , maxlen=max_length ) # .pad_sequences() 문자열길이 맞춤 함수
+# 모델 이용한 감성 예측
+result = model.predict( new_padded_sequences )
+# 예측 결과
+for index , review in enumerate( new_reviews )  : # for 인덱스,반복변수 in enumerate(반복할객체) :
+    print( f'리뷰 : {review}  , 확률 : { result[index] }' ) # 0 ~ 1 사이의 비율 # 0.5초과 긍정 # 0.5미만 부정
+
+
+
+
+
+
+
+
 
 
 
