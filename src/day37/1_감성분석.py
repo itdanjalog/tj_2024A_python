@@ -66,7 +66,7 @@ sample_ko_pos( text3 )
 
 # 10. 데이터 전처리 #  mecab.morphs(text) -----> okt.morphs(text)
     # 1 한글과 영문을 제외한 모두 삭제/치환
-train['document'] = train['document'].str.replace("[^A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ ]","")
+train['document'] = train['document'].str.replace("[^A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ ]","" , regex=True ) # pd판다스버전 2.x이상부터 , regex=True 속성
 print( train['document'].head() )
     # 2. 결측치/빈 데이터 제거 # .dropna( ) : 결측치 제거 함수
 train = train.dropna( )
@@ -88,7 +88,66 @@ def word_tokenization( text ) :
     return [  word for word in okt.morphs( text )  if word not in stop_words ] # 리스트 컴프리헨션
     # 실습 : 문장이 15,000 개라서 시간이 걸린다.
 data = train['document'].apply(( lambda x : word_tokenization(x) ) ) # document 열에 데이터 하나씩 불용어제거 함수에 대입한다.
+# data = train['document'] # 테스트용
 print( data.head() )
+
+# 11. 훈련용 과 테스트용 분할 # tip: 1. fit( split= ) 2. train_test_split( )
+training_size = 120000
+train_sentences = data[ : training_size ] # 0 ~ 119999
+valid_sentences = data[  training_size : ] # 119999 ~
+train_labels = train['label'][ : training_size ]
+train_labels = train['label'][  training_size :]
+
+# 12. 단어 사전 만들기 # .fit_on_texts( ) :문자와 숫자(인덱스)를 매칭한다 # 문자를 숫자로 변환한다.
+from tensorflow.keras.preprocessing.text import Tokenizer
+totkenizer = Tokenizer() # 토크나이저 객체  생성
+totkenizer.fit_on_texts( data ) # 토큰(단어) 사전 만들기 # 빈도수 기준
+# print( f'단어 사전(단어 와 인덱스(숫자) 매칭 ) : { totkenizer.word_index }')
+print( f'총 단어 개수 : { len( totkenizer.word_index )}')
+    # 5회 이상 반복되는 단어 찾기
+def get_vocab_size( threshold ) :
+    cnt = 0
+    for x in totkenizer.word_counts.values() :
+        if x >= threshold :
+            cnt += 1
+    return cnt
+vocab_size = get_vocab_size( 5 ) # 5회 이상 단어 찾기
+print( vocab_size ) # 출현 5회 이상의 단어 들의  수
+# 13 . <OOV> : 사전에 없는 단어 # 사전에 없는 단어는 <OOV> 표현한다.
+oov_tok = "<OOV>"
+vocab_size = 15000
+totkenizer = Tokenizer( oov_token = oov_tok , num_words= vocab_size +1 )
+totkenizer.fit_on_texts( data )
+print( f'총 단어 개수 : { len( totkenizer.word_index )}')
+# 14. 숫자 벡터로 변환
+print( train_sentences[ : 2 ] )
+train_sequences = totkenizer.texts_to_sequences( train_sentences )
+valid_sequences = totkenizer.texts_to_sequences( valid_sentences )
+print( train_sequences[ : 2 ] )
+# 15. 문장 중에서 최대 길이 구하기  # 모든 문장의 길이를 맞추기 .
+# 모든 문장들이 길이가 일치하면 모델 성능 도움 # 최대길이의 문자으로 일치화
+max_length = max( len(x)  for x in train_sequences )
+print( f'문장 최대 길이 : { max_length } ')
+# 16. 문장 길이를 동일하게 맞춘다 # 패딩
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+trunc_type = 'post' # 길이를 초과하는 자르는 속성 # post 뒤에 자르기
+padding_type = 'post' # 길이를 미달하는 경우 0으로 채우는 속성 # post 뒤에 채운다.
+train_padded = pad_sequences( train_sequences , truncating = 'post' , padding= padding_type , maxlen= max_length )
+valid_padded = pad_sequences( valid_sequences , truncating = trunc_type , padding= padding_type , maxlen= max_length )
+import numpy as np
+train_labels = np.asarray( train_labels ) # 배열로 변환
+valid_labels = np.asarray( train_labels ) # 배열로 변환
+print( f'샘플 : { train_padded[ : 1 ] }')
+
+
+
+
+
+
+
+
+
+
 
 
 
