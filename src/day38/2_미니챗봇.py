@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 
+# RNN 기본구조 : 1. 데이터수집 2.전처리 3.토큰화/패딩 4. 모델구축 5.모델학습 6.모델평가(튜닝) 7.모델예측
+
 # 1. 데이터 수집 # csv , db , 함수(코드/메모리)
 data = [
     {"user": "안녕하세요", "bot": "안녕하세요! 무엇을 도와드릴까요?"},
@@ -12,10 +14,10 @@ data = [
 ]
 data = pd.DataFrame( data ) #데이터프레임 변환
 print( data )
+
 # 2. 데이터 전처리
 inputs = list( data['user'] ) # 질문
 outputs = list( data['bot'] ) # 응답
-
 from konlpy.tag import Okt
 import re # 정규표현식
 okt = Okt()
@@ -56,44 +58,34 @@ input_sequences = pad_sequences( input_sequences  , maxlen=max_sequence_length )
 print( input_sequences ) #  '오늘 날씨 어때요' --> [ 2  3  4 ] --> [ 0 0 2 3 4 ] # 좋은 성능을 만들기 위해 차원을 통일
 
 # 종속변수 # 데이터프레임 --> 일반 배열 변환
-output_sequences = np.array( outputs )
+# output_sequences = np.array(  outputs  )
+# print( output_sequences )
+output_sequences = np.array( range( len( outputs ) ) )
 print( output_sequences )
 
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding , LSTM , Dense , Bidirectional #
 # 1. 모델
+model = Sequential( )
+model.add( Embedding( input_dim= len(tokenizer.word_index ) , output_dim = 50 , input_length=max_sequence_length ) )
+model.add( Bidirectional( LSTM( 256 ) ) ) ,  #  256 , 128 , 64 , 32
+model.add( Dense( len(outputs)  , activation='softmax') ) # 종속변수의 값 개수는 응답 개수
 # 2. 컴파일
+model.compile( loss='sparse_categorical_crossentropy' , optimizer='adam' , metrics=['accuracy'] )
 # 3. 학습
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+model.fit( input_sequences , output_sequences , epochs= 10  )
+# 4. 예측하기
+def response( text ) :
+    text = preprocess( text )# 1. 예측할 값도 전처리 한다.
+    text = tokenizer.texts_to_sequences( [ text ] )  # 2. 예측할 값도 토큰 과 패딩  # 학습된 모델과 데이터 동일
+    text = pad_sequences( text , maxlen= max_sequence_length )
+    result = model.predict( text ) # 3. 예측
+    max_index = np.argmax( result )  # 4. 결과 # 가장 높은 확률의 인덱스 찾기
+    return outputs[max_index]  # 5.
+# 확인
+print( response('안녕하세요') ) # 질문이 '안녕하세요' , 학습된 질문 목록중에 가장 높은 예측비율이 높은 질문의 응답을 출력한다.
+# 서비스 제공한다. # 플라스크
+while True :
+    text = input( '사용자 : ' ) # 챗봇에게 전달할 내용 입력받기
+    result = response( text ) # 입력받은 내용을 함수에 넣어 응답을 예측를 한다.
+    print( f'챗봇 : { result }') # 예측한 응답 출력한다.
