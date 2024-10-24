@@ -21,7 +21,7 @@ pairs = []
 for i, (text, pair) in enumerate(zip(corpus['Q'], corpus['A'])):
     texts.append(text)
     pairs.append(pair)
-    if i >= 2000:
+    if i >= 1000:
         break
 
 # question와 answer 데이터 확인
@@ -273,13 +273,13 @@ SAMPLE_SIZE = 3
 NUM_EPOCHS = 20
 
 # 체크포인트 생성
-checkpoint_path = 'model/seq2seq-chatbot-no-attention-checkpoint.ckpt'
-checkpoint = ModelCheckpoint(filepath=checkpoint_path,
-                             save_weights_only=True,
-                             save_best_only=True,
-                             monitor='loss',
-                             verbose=1
-                            )
+# checkpoint_path = 'model/seq2seq-chatbot-no-attention-checkpoint.ckpt'
+# checkpoint = ModelCheckpoint(filepath=checkpoint_path,
+#                              save_weights_only=True,
+#                              save_best_only=True,
+#                              monitor='loss',
+#                              verbose=1
+#                             )
 
 # seq2seq
 seq2seq = Seq2Seq(UNITS,
@@ -306,7 +306,7 @@ for epoch in range(NUM_EPOCHS):
                 answer_out_one_hot,
                 epochs=10,
                 batch_size=BATCH_SIZE,
-                callbacks=[checkpoint]
+                #callbacks=[checkpoint]
                 )
     # 랜덤한 샘플 번호 추출
     samples = np.random.randint(DATA_LENGTH, size=SAMPLE_SIZE)
