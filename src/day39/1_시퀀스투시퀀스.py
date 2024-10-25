@@ -105,6 +105,32 @@ answer_in_padded = pad_sequences( answer_in_sequence , maxlen=MAX_LENGTH , paddi
 answer_out_padded = pad_sequences( answer_out_sequence , maxlen=MAX_LENGTH , padding='post' )
 print( question_padded.shape , answer_in_padded.shape , answer_out_padded.shape ) # (1001, 30) (1001, 30) (1001, 30)
 
+# 상속 : 하나의 클래스가 다른 클래스에게 속성/필드 과 함수/기능 물려두는 행위
+    # 자바 : class 클래스A extends 클래스B{ }
+        # this , super
+    # 파이썬 : class 클래스A( 클래스B ) :
+        # self , super
+from tensorflow.keras.layers import Embedding , LSTM , Dense , Dropout
+from tensorflow.keras.models import Model
+# - 텐서플로의 Model 클래스로부터 상속받아 인코더 클래스 정의하기
+class Encoder( tf.keras.Model ) :
+    # 초기화함수 # 생성자 # 사용할 변수 , 레이어를 미리 불러와서 파라미터 값들을 미리 설정 한다.
+    def __init__(self , units , vocab_size , embedding_dim , time_steps ):
+                # units 매개변수1 : LSTM에서 사용할 유닛/노드/뉴런 수
+                    # "안녕하세요, 오늘 날씨 어떄요?" 문장 가정이라고 했을때.
+                # vocab_size 매개변수2 : 임베딩 레이어의 입력으로 들어가는 단어 크기
+                    # "안녕하세요" , "오늘" , "날씨" ,"어때요" => 4
+                # embedding_dim 매개변수3 : 임베딩 레이어의 각 단어를 크기의 벡터 차원
+                    # 밀집행렬를 처리할때 한 단어를 표현을 차원수 # "안녕하세요" 몇차원으로 구성할지
+                # time_steps 매개변수4 : 임베딩 레이어의 입력으로 들어가는 시퀀스의 길이
+                    # 한번에 몇개의 단어를 모델이 학습하고 기억할지 단위 길이 # 2 => "안녕하세요" , "오늘"
+        super( Encoder , self ).__init__() # 상속받은 슈퍼클래스의 초기화함수(생성자) 를 호출
+        # 1. 임베딩 레이어
+        self.embedding = Embedding( vocab_size , embedding_dim , input_length=time_steps )
+        # 2. 드롭아웃 레이어 # 일반드롭아웃 # 0.2 : 20%를 무작위로 비활성
+        self.dropout = Dropout( 0.2 )
+        # 3. LSTM 레이어 #
+        self.lstm = LSTM( units , return_state= True )
 
 
 
