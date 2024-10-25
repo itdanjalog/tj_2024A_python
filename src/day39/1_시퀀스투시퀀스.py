@@ -112,6 +112,7 @@ print( question_padded.shape , answer_in_padded.shape , answer_out_padded.shape 
         # self , super
 from tensorflow.keras.layers import Embedding , LSTM , Dense , Dropout
 from tensorflow.keras.models import Model
+
 # - 텐서플로의 Model 클래스로부터 상속받아 인코더 클래스 정의하기
 class Encoder( tf.keras.Model ) :
     # 초기화함수 # 생성자 # 사용할 변수 , 레이어를 미리 불러와서 파라미터 값들을 미리 설정 한다.
@@ -131,15 +132,19 @@ class Encoder( tf.keras.Model ) :
         self.dropout = Dropout( 0.2 )
         # 3. LSTM 레이어 #
         self.lstm = LSTM( units , return_state= True )
-
-
-
-
-
-
-
-
-
-
-
-
+    # 실행 함수 # call
+    def call(self, inputs ):
+        x = self.embedding( inputs ) # 임베딩 레이어 에 따른 밀집행렬(벡터) 하기
+        x = self.dropout( x ) # 드롭아웃 레이어 에 따른 무작위 노드를 제외 하기
+        x , hidden_state , call_state = self.lstm( x ) # LSTM 레이어 에 따른 학습
+            # x : LSTM 알고리즘이 특정 단어로 부터의 특징(정보/패턴) 값
+                # 문장 : '오늘 무엇을 먹을까?' ---> 현재 문장의 분석 결과를 알려주는 출력값
+            # 은닉 상태 : LSTM 알고리즘이 현재 시점에서의 기록한 특징들(정보/패턴)들을 저장하는 메모리
+                # L(LONG)S(SHORT)T(TERM)M : 앞전 문장을 잊지 않고 지속하는 문장을 기록하는 메모리
+            # 셀 상태 : LSTM 알고즘이 전체 단어들 에서 중요한 특징(정보/패턴)들을 저장하는 메모리
+                # 앞전 전체 분석된 문장들 중에서 중요한 단어들을 기억하는 메모리
+            # (특징/패턴) 분석
+                # CNN : 이미지 분석 , # 곡선 , 색감 , 사이즈 , 비율 , 질감(텍스처) 등등 # 0~255 # 컴퓨터는 이미지를 RGB
+                # RNN : 텍스트 분석 , # 빈도 , 감정 , 형태소(동사,형용사 등등) , 단어의 의미 # 벡터 # 컴퓨터는 텍스트 대신 벡터
+        # Dense 레이어가 없는 이유는 현재 클래스(인코더) 의 목적은 입력과정 하기 위해서 --> 디코더 전달할 예정
+        return [ hidden_state , call_state ]
