@@ -167,10 +167,7 @@ class Decoder( tf.keras.Model ) :
         x , hidden_state , cell_state = self.lstm( x , initial_state= initial_state ) # LSTM 레이어 에 따른 학습
             # initial_state : 초기화상태 속성 # 인코더와 결합 이후에 인코더에 생성한 은닉상태 와 셀 상태를 대입한다.
         x = self.dense( x ) # 출력 레이어 # 출력 : 학습된 모델에서의 최종 출력된 값 : X
-        return  return ( x , hidden_state , cell_state )
-
-
-
+        return ( x , hidden_state , cell_state ) # ( 최종확률값 , 은닉상태 , 셀상태 )
 
 
 
