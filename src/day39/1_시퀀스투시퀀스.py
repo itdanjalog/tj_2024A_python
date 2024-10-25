@@ -136,7 +136,7 @@ class Encoder( tf.keras.Model ) :
     def call(self, inputs ):
         x = self.embedding( inputs ) # 임베딩 레이어 에 따른 밀집행렬(벡터) 하기
         x = self.dropout( x ) # 드롭아웃 레이어 에 따른 무작위 노드를 제외 하기
-        x , hidden_state , call_state = self.lstm( x ) # LSTM 레이어 에 따른 학습
+        x , hidden_state , cell_state = self.lstm( x ) # LSTM 레이어 에 따른 학습
             # x : LSTM 알고리즘이 특정 단어로 부터의 특징(정보/패턴) 값
                 # 문장 : '오늘 무엇을 먹을까?' ---> 현재 문장의 분석 결과를 알려주는 출력값
             # 은닉 상태 : LSTM 알고리즘이 현재 시점에서의 기록한 특징들(정보/패턴)들을 저장하는 메모리
@@ -147,4 +147,45 @@ class Encoder( tf.keras.Model ) :
                 # CNN : 이미지 분석 , # 곡선 , 색감 , 사이즈 , 비율 , 질감(텍스처) 등등 # 0~255 # 컴퓨터는 이미지를 RGB
                 # RNN : 텍스트 분석 , # 빈도 , 감정 , 형태소(동사,형용사 등등) , 단어의 의미 # 벡터 # 컴퓨터는 텍스트 대신 벡터
         # Dense 레이어가 없는 이유는 현재 클래스(인코더) 의 목적은 입력과정 하기 위해서 --> 디코더 전달할 예정
-        return [ hidden_state , call_state ]
+        return [ hidden_state , cell_state ]
+
+# - 텐서플로의 Model 클래스로부터 상속받아 디코더 클래스 정의하기
+class Decoder( tf.keras.Model ) :
+    # 1.
+    def __init__(self , units , vocab_size , embedding_dim , time_steps ):
+        super( Decoder , self ).__init__()
+        self.embedding = Embedding( vocab_size , embedding_dim , input_length=time_steps)
+        self.dropout = Dropout( 0,2 )
+        self.lstm = LSTM( units , return_state=True , return_sequences=True )
+            # return_state=True : 생략가능(기본값) , 은닉상태와셀상태 반환 설정
+            # return_sequences=True : 모든 시점의 출력을 반환한다.
+        self.dense = Dense( vocab_size , activation='softmax')# 최종 출력 레이어
+    # 2.
+    def call(self , inputs , initial_state):
+        x = self.embedding( inputs )
+        x = self.dropout( x )
+        x , hidden_state , cell_state = self.lstm( x , initial_state= initial_state ) # LSTM 레이어 에 따른 학습
+            # initial_state : 초기화상태 속성 # 인코더와 결합 이후에 인코더에 생성한 은닉상태 와 셀 상태를 대입한다.
+        x = self.dense( x ) # 출력 레이어 # 출력 : 학습된 모델에서의 최종 출력된 값 : X
+        return  return ( x , hidden_state , cell_state )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
