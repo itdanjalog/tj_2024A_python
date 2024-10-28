@@ -294,7 +294,7 @@ DATA_LENGTH = len( questions ) # 질문의 총 개수
 SAMPLE_SIZE = 3 # 샘플 개수
 
 # 모델의 가중치를 저장하고 추후에 가중치를 재 호출하여 다른 모델 또는 곳 에서 재 사용
-checkpoint_path = 'model/no-attention.weights.h5' # 경로/파일명.weights.h5
+checkpoint_path = 'model/no-attention.weights.h5' # 경로/파일명.weights.h5 # 현재 폴더내 'model' 생성
 from tensorflow.keras.callbacks import ModelCheckpoint # 체크포인트 클래스 모듈 가져오기
 checkpoint = ModelCheckpoint( filepath= checkpoint_path , # 1. 모델 가중치를 저장할 파일 경로 지정
                               save_weights_only = True ,  # 2. 모델의 가중치만 저장 # True 모델의 구조는 저장되지 않는다 # 구조 저장은 False
@@ -313,6 +313,33 @@ def make_prediction( model , question_inputs ) : # model : 학습한 모델 , qu
     # 예측 결과를 np(넘파일) 배열로 변환 하고 차원을 1차원(-1) 배열로 변경한다.
     # 나중에 문장 조회시 평탄화(1차원변경)하고 convert_index_to_text() 에게 전달할 예정
     return  results
+
+# 훈련 과정
+for epoch in range( NUM_EPOCHS ) : # 총 20회 반복
+    print( f' processing epoch : { epoch * 10 + 1 } ') # 현재 에포크
+    seq2seq.fit( [question_padded , answer_in_padded ] , answer_out_one_hot ,
+                 epochs = 10 , batch_size= BATCH_SIZE , callbacks=[checkpoint] )
+    # fit() 모델 훈련 함수
+    # 1. [question_padded , answer_in_padded ] : 입력 데이터
+    # 2. answer_out_one_hot : 결과 데이터
+    # 3. callbacks : 훈련중 체크포인트 지정한다. # 가중치만 저장
+
+    # 훈련후 샘플수 만큼 난수의 질문을 이용하여 성능 예측하기
+    samples = np.random.randint( DATA_LENGTH , size = SAMPLE_SIZE ) # 전체 질문에서 3개의 질문을 난수로 추출
+        # np.random.randint(  전체수 , size = 추출할개수 ) : 0부터 전체수 까지 추출할 개수만큼 정수배열로 반환 함수
+    # 예측 성능 테스트
+    for index in samples : # 임의의 3개의 질문이 있는 리스트
+        question_inputs = question_padded[index] # 선정된 질문의 인코딩(패딩) 된 단어 가져오기
+        # 예측 # np.expand_dims( 배열 , 추가할차원인덱스 ) : 새로운 차원 추가 # 0 : 첫번째 자리에 차원 추가
+            # ( 1 , 단어의패딩값 ) : 2차원으로 배열 만든다. # 모델의 예측 매개변수가 2차원이라서 차원 맞추기 ( 응답차원=0 , 입력차원  )
+        results = make_prediction( seq2seq , np.expand_dims( question_inputs , 0 ) )
+        # 예측한 벡터들을 문장으로 변환
+        results = convert_index_to_text( results , END_TOKEN )
+        # 확인
+        print( f'Q : {questions[index]}')
+        print( f'A : { results }')
+        print( )
+
 
 
 
