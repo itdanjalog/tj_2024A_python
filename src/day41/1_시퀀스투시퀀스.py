@@ -235,7 +235,7 @@ VOCAB_SIZE = len( tokenizer.word_index ) +1 # tokenizer.word_index 단어사전 
 # 맛있다 = [ 0  0  1 ]
 def convert_to_one_hot( padded ) :
     # 1. 응답 개수 만큼의 차원수을 0 으로 채우기
-    one_hot_vector = np.zeros( len( answer_out_padded ) , MAX_LENGTH , VOCAB_SIZE ) # :np.zeros()
+    one_hot_vector = np.zeros( (len( answer_out_padded ) , MAX_LENGTH , VOCAB_SIZE )) # :np.zeros()
     # ( 데이터1, 데이터2 , 데이터3 ) : 3차원 배열을 초기화
     # len( answer_out_padded ) : 총 응답의 개수 # (1001, 30)
     # MAX_LENGTH : 문장내 최대 길이
