@@ -1,6 +1,8 @@
 # day39 --> 1_시퀀스투시퀀스.py # python3.8 gpu
 
 import pandas as pd
+from scipy.integrate import quad
+
 # 1. 데이터수집
 # - 질문과 답변이있는 말뭉치(대화내용)를 가져오기
     # pd.read_csv('csv로컬경로/웹경로')
@@ -339,6 +341,39 @@ for epoch in range( NUM_EPOCHS ) : # 총 20회 반복
         print( f'Q : {questions[index]}')
         print( f'A : { results }')
         print( )
+
+
+# 새로운 질문을 입력받아 전처리 함수
+def make_question(sentence):
+    sentence = clean_and_morph(sentence) # 형태소 분석 함수 실행
+    question_sequence = tokenizer.texts_to_sequences([sentence]) # 벡터화
+    question_padded = pad_sequences( question_sequence , maxlen=MAX_LENGTH , truncating='post' , padding='post' ) # 패딩
+    return question_padded
+# 확인
+make_question("오늘 날씨 어때?")
+
+# 챗봇
+def run_chatbot( question ) :
+    question_inputs = make_question( question ) # make_question() 함수를 호출하여 질문을 전처리 한다.
+    results = make_prediction( seq2seq , question_inputs ) # make_prediction() 함수에 학습된 모델과 전처리된 질문을 대입하여 응답을 예측한다.
+    results = convert_index_to_text( results , END_TOKEN ) # convert_index_to_text() 함수를 이용한 예측응답 결과를 문장으로 변환 한다.
+    return results
+
+while True :
+    user_input = input('<< 말을 걸어 보세요!\n')
+    if user_input == 'q' : # 만약에 q 입력시 챗봇 종료
+        break
+    print( f'>> 챗봇 응답 : { run_chatbot( user_input )}') # 입력받은 질문을 run_chatbot() 함수에 대입하고 예측한 문장을 출력한다.
+
+
+
+
+
+
+
+
+
+
 
 
 
