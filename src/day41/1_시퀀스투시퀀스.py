@@ -275,8 +275,44 @@ def convert_index_to_text( indexs , end_token ) :
     return sentence # 생성된 문장(변수) 반환
 
 ###  .ckpt --> .weights.h5 : 확장자 변경
+# 모델 객체 생성 하기전에 파리미터 값 정의
+BUFFER_SIZE = 1000 # 버퍼 : 모델이 훈련 중에 저장할 (무작위)샘플 최대수
+# 버퍼가 클수록 다양하게 잘 섞여서 학습에 성능 향상 하는데, 메모리 소모가 크다. # 조절
+BATCH_SIZE = 16 # 배치 : 모델이 훈련 중에 훈련1번에 있어서 사용되는 샘플 수
+# 배치가 클수록 안정적이지만, 메모리 소모가 크다 # 8 16 32 64 단위로 주로 사용된다. # 조절
+EMBEDDING_DIM = 100 # 임베딩 차원 : 단어를 벡터로 인코딩 과정, 인코딩 과정에 있어서 한 단어가 사용할 차원수
+# 벡터로 표현할 차원수가 크면 표현성능이 좋아지지만 # 메모리 소모 와 계산 비용이 증가한다. # 단어들간의 의미 관계 파악할수 있다.
+TIME_STEPS = MAX_LENGTH # 문장내 단어의 최대 개수 # 30(임의)
+START_TOKEN = tokenizer.word_index['<START>'] # 문장의 시작을 알리는 토큰(단어) 인덱스 # 단어 생성시(예측) 시작 위치
+END_TOKEN = tokenizer.word_index['<END>'] # 문장의 끝을 알리는 토큰(단어) 인덱스 # 단어 생성시(예측) 해당 토큰을 만나면 문장생성 종료
+UNITS = 128 # 유닛 수 : RNN(유닛) CNN(노드) ==> 뉴런 수 # 각 모델이 학습하는 레이어에 사용될 뉴런 수
+# 많은 유닛 수를 사용하면 더 복잡한 학습이 가능 하지만 , 과대적합에 빠질수 있다 , 주로 32 , 64 , 128 , 256 단위로 사용한다.
+VOCAB_SIZE = len( tokenizer.word_index) + 1 # (토큰나이저)단어사전내 단어 수 # +1 : <OOV>
+NUM_EPOCHS = 20 # 훈련 반복 횟수
 
+DATA_LENGTH = len( questions ) # 질문의 총 개수
+SAMPLE_SIZE = 3 # 샘플 개수
 
+# 모델의 가중치를 저장하고 추후에 가중치를 재 호출하여 다른 모델 또는 곳 에서 재 사용
+checkpoint_path = 'model/no-attention.weights.h5' # 경로/파일명.weights.h5
+from tensorflow.keras.callbacks import ModelCheckpoint # 체크포인트 클래스 모듈 가져오기
+checkpoint = ModelCheckpoint( filepath= checkpoint_path , # 1. 모델 가중치를 저장할 파일 경로 지정
+                              save_weights_only = True ,  # 2. 모델의 가중치만 저장 # True 모델의 구조는 저장되지 않는다 # 구조 저장은 False
+                              save_best_only = True ,     # 3. 훈련중 모니터( fit : var_loss ) 값이 개선될때 만 가중치를 저장 # 성능이 향상될때 체크포인트 업데이트
+                              monitor='loss' ,            # 4. 어떤 값을 모니터링 할지 지정 # loss(손실함수)
+                              verbose= 1 )                # 5. 과정 로그 수준 # 생략 가능
+# 시퀀스 모델 객체 생성
+seq2seq = Seq2Seq( UNITS , VOCAB_SIZE , EMBEDDING_DIM , TIME_STEPS , START_TOKEN , END_TOKEN )
+# 모델 컴파일
+seq2seq.compile( optimizer='adam' , loss='categorical_crossentropy' , metrics=['accuracy'])
+# 모델 학습후 예측 함수
+def make_prediction( model , question_inputs ) : # model : 학습한 모델 , question_inputs : 예측할 새로운 질문
+    results = model( inputs = question_inputs , training=False) # 예측이므로 훈련이 아니다. # Seq2Seq클래스내 call함수내 else 코드들이 실행된다.
+    # 변환된 인덱스를 문장으로 변환
+    results = np.asarray( results ) .reshape( -1 )
+    # 예측 결과를 np(넘파일) 배열로 변환 하고 차원을 1차원(-1) 배열로 변경한다.
+    # 나중에 문장 조회시 평탄화(1차원변경)하고 convert_index_to_text() 에게 전달할 예정
+    return  results
 
 
 
