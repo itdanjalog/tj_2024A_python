@@ -204,7 +204,7 @@ class Seq2Seq( tf.keras.Model ) : # 클래스 정의
             for i in tf.range( self.time_steps ) :
                 # ( 최종확률값 , 은닉상태 , 셀상태 ) = 디코더객체
                 decoder_output , decoder_hidden , decoder_cell = self.decoder( target_seq , initial_state = context_vector )
-                # 예측결과에서 가장 확률이 높은 인덱스 찾기 : tf.argmax( decoder_output , axis=1 ) # tf.argmax() 가장 높은 값의 인덱스 반환함수
+                # 예측결과에서 가장 확률이 높은 인덱스 찾기 : tf.argmax( decoder_output , axis=1 ) # tf.argmax() 가장 높은 값의 인덱스 반환함수 # tf.cast() 자료형 변환 함수
                 decoder_output = tf.cast( tf.argmax( decoder_output , axis=1 ) , dtype=tf.int32 )
                 # tf.reshape() 차원을 변경 함수
                 decoder_output = tf.reshape( decoder_output , shape=( 1 , 1 ) )
@@ -220,6 +220,64 @@ class Seq2Seq( tf.keras.Model ) : # 클래스 정의
             return tf.reshape( results.stack() , shape= ( 1 , self.time_steps ) )
 # 시퀀스란 : 문장을 정해진 순서대로 나열된 단어를 의미 # 알고리즘,자료구조,딥러닝 등등 에서 사용되는 용어
 # 예] 반가워 사랑해 좋아 => ["반가워" , "사랑해" , "좋아" ]
+
+
+VOCAB_SIZE = len( tokenizer.word_index ) +1 # tokenizer.word_index 단어사전 # 단어사전의 단어 개수 # +1 : <OOV> 추가 했으므로
+
+# - 디코더의 결과를 원핫 인코딩 벡터로 변환
+# 컴퓨터가 이해하는 언어인 벡터로 변환하는 방법
+# 임베딩(밀집행렬) : 주로 챗봇의 질문에서 사용된다.( 학습 데이터 ) # 임베딩은 단어 간의 유사성 파악 유리
+# vs
+# 원핫인코딩 : 주로 챗봇의 답변에서 사용된다. ( 결과 데이터 ) # 유사성 파악 아닌 단순 분류 에서 유리
+# 사과는 너무 맛있다.
+# 사과 = [ 1  0  0 ]
+# 너무 = [ 0  1  0 ]
+# 맛있다 = [ 0  0  1 ]
+def convert_to_one_hot( padded ) :
+    # 1. 응답 개수 만큼의 차원수을 0 으로 채우기
+    one_hot_vector = np.zeros( len( answer_out_padded ) , MAX_LENGTH , VOCAB_SIZE ) # :np.zeros()
+    # ( 데이터1, 데이터2 , 데이터3 ) : 3차원 배열을 초기화
+    # len( answer_out_padded ) : 총 응답의 개수 # (1001, 30)
+    # MAX_LENGTH : 문장내 최대 길이
+    # VOCAB_SIZE : 단어 사전의 단어수
+    # ( 응답단어의 총개수 , 최대길이 , 단어사전의 단어수 )
+    # 2.지정한 인덱스의 1 채움 으로써 원 핫 인코딩을 완성한다.
+        # 1. 행
+    for i , sequence in enumerate( answer_out_padded ) : # for index , value in enumerate( 리스트 ) :
+        # 2. 열
+        # i : 현재 시퀀스의 인덱스 # sequence : 현재 시퀀스의 단어
+        for j , index in enumerate( sequence ) :
+            # 3. 높이
+            # j : 현재 단어의 인덱스 # 현재 단어의 인덱스 번호
+            one_hot_vector[ i , j , index ] = 1 # 지정한 인덱스의 1 채움
+    return one_hot_vector
+# - .zeros( 차원수 ) : 지정한 차원수 만큼 0 으로 채워진다.
+# 1. (np).zeros( 5 ) : [ 0 0 0 0 0 ]
+# 2. (np).zeros( 3 , 4 ) : [ [ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ] ]
+# 3. (np).zeros( 2 , 3 , 4 ) : [ [ [ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ] ]  [ [ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ] ]  ]
+answer_in_one_hot = convert_to_one_hot( answer_in_padded )
+answer_out_one_hot = convert_to_one_hot( answer_out_padded )
+
+# 모델(디코더) 이 예측한 단어목록(indexs:예측한단어의인덱스)를 이용한 새로운 문장 만들기 함수
+def convert_index_to_text( indexs , end_token ) :
+    sentence = '' # 생성된 문장을 저장할 변수를 선언 # 처음에는 빈 문자열
+    for index in indexs :  # indexs 배열의 각 인덱스를 반복 # 해당 배열에는 예측된 단어가 위치한 배열
+        if index == end_token : # 만약에 현재 인덱스가 end_token(마지막문장) 이면 문장 생성 종료한다.
+            break
+        # 예측한 인덱스가 0보다 크고 (토큰나이저) 단어사전내 지정한 인덱스의 단어가 None 이 아니면
+        if index > 0 and tokenizer.index_word[index] is not None :
+            sentence += tokenizer.index_word[index] # 찾았으면 찾은 단어를 생성한문장 변수에 += 누적으로 더한다.
+        else : # 단어사전에 없는 인덱스이면 빈 문자열 추가
+            sentence +=''
+        # 빈칸 추가 # 다음 반복으로(다음 단어 생성) 이동 하기 전에 띄어쓰기 추가
+        sentence += ' ' # 공백 추가
+    # 전체 반복문이 종료
+    return sentence # 생성된 문장(변수) 반환
+
+###  .ckpt --> .weights.h5 : 확장자 변경
+
+
+
 
 
 
