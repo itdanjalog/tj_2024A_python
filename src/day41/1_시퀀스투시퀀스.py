@@ -204,8 +204,8 @@ class Seq2Seq( tf.keras.Model ) : # 클래스 정의
             for i in tf.range( self.time_steps ) :
                 # ( 최종확률값 , 은닉상태 , 셀상태 ) = 디코더객체
                 decoder_output , decoder_hidden , decoder_cell = self.decoder( target_seq , initial_state = context_vector )
-                # 예측결과에서 가장 확률이 높은 인덱스 찾기 : tf.argmax( decoder_output , axis=1 ) # tf.argmax() 가장 높은 값의 인덱스 반환함수 # tf.cast() 자료형 변환 함수
-                decoder_output = tf.cast( tf.argmax( decoder_output , axis=1 ) , dtype=tf.int32 )
+                # 예측결과에서 가장 확률이 높은 인덱스 찾기 : tf.argmax( decoder_output , axis=-1 ) # tf.argmax() 가장 높은 값의 인덱스 반환함수 # tf.cast() 자료형 변환 함수
+                decoder_output = tf.cast( tf.argmax( decoder_output , axis=-1 ) , dtype=tf.int32 )
                 # tf.reshape() 차원을 변경 함수
                 decoder_output = tf.reshape( decoder_output , shape=( 1 , 1 ) )
                 # (TensorArray).write() : i번째 인덱스의 예측한 단어를 텐서배열에 저장
